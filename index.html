@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Сопровождение ProgressPlan и Controller</title>
-<meta name="description" content="Коммерческое предложение: сопровождение и развитие ProgressPlan и Controller. Один абонемент на обе программы и фиксированные цены на доработки.">
+<meta name="description" content="Коммерческое предложение: сопровождение и развитие ProgressPlan и Controller. Один абонемент на обе программы: поддержка, доработки и развитие без отдельных платежей за задачи.">
 <meta name="robots" content="noindex">
 <meta property="og:title" content="Сопровождение ProgressPlan и Controller">
 <meta property="og:description" content="Один абонемент на обе программы: 50 000 ₽ в месяц вместо 60 000 ₽.">
@@ -392,6 +392,8 @@
   .toast { position: fixed; left: 50%; bottom: var(--s-300); z-index: 60; transform: translate(-50%, 24px); opacity: 0; padding: var(--s-100) var(--s-200); background: var(--ink); color: var(--bg); transition: transform 500ms var(--ease), opacity 300ms var(--ease); pointer-events: none; }
   .toast.show { transform: translate(-50%, 0); opacity: 1; }
 
+  .principle-list li { align-content: start; }
+  .principle-list li b { display: block; margin-bottom: var(--s-50); }
   /* Responsive */
   @media (max-width: 1100px) {
     .heading-1 { font-size: 72px; }
@@ -580,7 +582,7 @@
     </div>
     <div class="grid hero-bottom">
       <div class="hero-copy">
-        <p class="hero-lead title-2 muted reveal">Готов сопровождать и развивать ProgressPlan и Controller в вашей компании. Фиксированная плата за поддержку и фиксированная цена каждой доработки, согласованная до начала работ.</p>
+        <p class="hero-lead title-2 muted reveal">Готов сопровождать и развивать ProgressPlan и Controller в вашей компании. Одна фиксированная плата в месяц: поддержка, доработки и развитие программ без отдельных счетов за задачи.</p>
         <div class="hero-cta reveal">
           <a class="btn btn-ink btn-lg button-md" href="#pricing">Посмотреть тарифы <i class="ph ph-arrow-down-right"></i></a>
           <span class="body-6 muted">Пробный период 3 месяца</span>
@@ -592,7 +594,7 @@
         <div class="spec-row hl body-6"><span>Абонемент на обе программы</span><b class="mono">50 000 ₽ / мес</b></div>
         <div class="spec-row body-6"><span>Вместо раздельного</span><b class="mono muted"><s>60 000 ₽</s></b></div>
         <div class="spec-row body-6"><span>Экономия за год</span><b class="mono">120 000 ₽</b></div>
-        <div class="spec-row body-6"><span>Доработки</span><b class="mono">от 5 000 ₽</b></div>
+        <div class="spec-row body-6"><span>Доработки и новые функции</span><b>в абонементе</b></div>
         <div class="spec-row body-6"><span>Ответ, если всё легло</span><b class="mono">≤ 2 ч</b></div>
         <div class="spec-row body-6"><span>Обращения и часы</span><b>не считаются</b></div>
       </aside>
@@ -607,15 +609,15 @@
     <div class="grid sec-head">
       <div class="sec-num reveal"><span class="mono sig">00</span><span class="label muted">Принцип</span></div>
       <div class="sec-title reveal">
-        <h2 class="heading-2">Оплата за результат, а не за часы</h2>
-        <p class="title-2 muted">Часы невозможно проверить. Поэтому вы платите фиксированную сумму за поддержку и фиксированную цену за каждую принятую задачу.</p>
+        <h2 class="heading-2">Одна сумма в месяц, и всё внутри</h2>
+        <p class="title-2 muted">Вы платите фиксированный абонемент. Поддержка, исправление ошибок, доработки и новые функции входят в него без отдельных счетов.</p>
       </div>
     </div>
     <div class="grid">
       <ol class="body-col cols-2 clauses stagger principle-list" style="grid-template-columns: repeat(3, 1fr); gap: 0 var(--s-300)">
         <li style="grid-template-columns:1fr;border-top:1px solid var(--rule-strong)"><span class="mono">0.1</span><span><b class="body-1">Постоянная сумма.</b> <span class="body-6 muted">Абонемент не зависит от числа обращений и потраченного времени.</span></span></li>
-        <li style="grid-template-columns:1fr;border-top:1px solid var(--rule-strong)"><span class="mono">0.2</span><span><b class="body-1">Цена известна заранее.</b> <span class="body-6 muted">Оказалась задача сложнее, цена не растёт: это мой риск, а не ваш.</span></span></li>
-        <li style="grid-template-columns:1fr;border-top:1px solid var(--rule-strong)"><span class="mono">0.3</span><span><b class="body-1">Только принятое.</b> <span class="body-6 muted">В акт попадает только то, что вы проверили. Каждая строка ссылается на задачу в трекере.</span></span></li>
+        <li style="grid-template-columns:1fr;border-top:1px solid var(--rule-strong)"><span class="mono">0.2</span><span><b class="body-1">Доработки без доплат.</b> <span class="body-6 muted">Задачи любого размера входят в абонемент. Размер задачи показывает только примерный срок.</span></span></li>
+        <li style="grid-template-columns:1fr;border-top:1px solid var(--rule-strong)"><span class="mono">0.3</span><span><b class="body-1">Развитие по моей инициативе.</b> <span class="body-6 muted">Сам предлагаю улучшения и реализую те, что вы одобрите.</span></span></li>
       </ol>
     </div>
   </div>
@@ -628,7 +630,7 @@
     <div class="grid sec-head">
       <div class="sec-num reveal"><span class="mono sig">01</span><span class="label muted">Тарифы</span></div>
       <div class="sec-title reveal">
-        <h2 class="heading-2">Абонемент на поддержку</h2>
+        <h2 class="heading-2">Абонемент на поддержку и развитие</h2>
         <p class="title-2 muted">Можно взять одну программу. Обе вместе выходят на 10 000 ₽ в месяц дешевле.</p>
       </div>
     </div>
@@ -643,7 +645,7 @@
           </tbody>
           <tfoot><tr><td class="body-6 muted">Пакет против двух программ по отдельности</td><td class="num"><span class="save-chip label">−10 000 ₽</span></td><td class="num yr"><span class="save-chip label">−120 000 ₽</span></td></tr></tfoot>
         </table>
-        <div class="note-line body-6"><span class="mono">*</span><span class="muted">Доработки оплачиваются отдельно по прайсу из раздела 03, от 5 000 ₽ за задачу, одинаково для обеих программ.</span></div>
+        <div class="note-line body-6"><span class="mono">*</span><span class="muted">Других платежей нет. Доработки любого размера и новые функции входят в абонемент, подробнее в разделе 03.</span></div>
       </div>
     </div>
   </div>
@@ -652,7 +654,7 @@
 <!-- TAGLINE -->
 <section class="tagline" aria-label="Главное">
   <div class="wrap grid">
-    <p class="heading-2" id="tagline" data-hl="результат,|до">Вы платите за результат, а не за часы. Цену каждой задачи знаете до того, как я начну работу.</p>
+    <p class="heading-2" id="tagline" data-hl="Одна|сумма|развитие">Одна сумма в месяц. Поддержка, доработки и развитие программ уже внутри.</p>
   </div>
 </section>
 
@@ -663,7 +665,7 @@
     <div class="grid sec-head">
       <div class="sec-num reveal"><span class="mono sig">02</span><span class="label muted">Состав абонемента</span></div>
       <div class="sec-title reveal">
-        <h2 class="heading-2">Вся повседневная работа с программами</h2>
+        <h2 class="heading-2">Вся работа с программами</h2>
         <p class="title-2 muted">Программы работают, данные в них актуальны, сотрудники умеют ими пользоваться. Количество обращений не ограничено.</p>
       </div>
     </div>
@@ -672,8 +674,8 @@
         <ol class="cols-2 clauses stagger body-3" style="gap: 0 var(--s-600)">
           <li><span class="mono">2.1</span><span>Консультации: «как сделать», «почему не считается», «почему не синхронизируется», «где найти»</span></li>
           <li><span class="mono">2.2</span><span>Обучение сотрудников и подрядчиков, группой и индивидуально, плюс инструкции</span></li>
-          <li><span class="mono">2.3</span><span>Мелкие правки, задачи размера S из раздела 03</span></li>
-          <li><span class="mono">2.4</span><span>Исправление ошибок в существующем функционале, правило в разделе 05</span></li>
+          <li><span class="mono">2.3</span><span>Доработки и новые функции любого размера, раздел 03</span></li>
+          <li><span class="mono">2.4</span><span>Исправление ошибок вне очереди, раздел 05</span></li>
           <li><span class="mono">2.5</span><span>Контроль работы приложений на сервере, обновления</span></li>
           <li><span class="mono">2.6</span><span>Пользователи: добавление, блокировка, сброс паролей, права доступа</span></li>
         </ol>
@@ -683,7 +685,7 @@
           <thead class="label muted"><tr><th></th><th>ProgressPlan</th><th>Controller</th></tr></thead>
           <tbody>
             <tr><td>Загрузка данных</td><td>Файлы Excel с WBS и периодами, заведение новых проектов, проверка результата</td><td>Проекты, помещения и объекты контроля, подрядные организации, нормативы, чеклисты, шаблоны предписаний</td></tr>
-            <tr><td>Мелкие правки, например</td><td>Поля и подписи, столбец в существующем отчёте</td><td>Поля и подписи, статус замечания, текст в шаблоне предписания</td></tr>
+            <tr><td>Доработки, например</td><td>Новые отчёты и выгрузки, импорт под новые шаблоны файлов, роли и права</td><td>Новые виды документов, отчёты по подрядчикам, доработка шахматки и обхода технадзора</td></tr>
             <tr><td>Дополнительно</td><td class="muted">—</td><td>Помощь с установкой и обновлением приложения на Android и iOS</td></tr>
           </tbody>
         </table>
@@ -697,7 +699,7 @@
             <tr><td><span class="sig mono">!</span>&nbsp;&nbsp;&nbsp; Вопрос или несрочная ошибка</td><td class="num mono">≤ 1 дня</td><td class="num mono">≤ 5 дней</td></tr>
           </tbody>
         </table>
-        <div class="note-line body-6"><span class="mono">×</span><span class="muted">Не входит: доработки размера M, L и XL. Они оплачиваются по прайсу из раздела 03.</span></div>
+        <div class="note-line body-6"><span class="mono">✓</span><span class="muted">Отдельно оплачиваемых услуг нет: всё перечисленное входит в абонемент.</span></div>
       </div>
     </div>
   </div>
@@ -708,51 +710,56 @@
   <div class="wrap">
     <div class="rule-top"></div>
     <div class="grid sec-head">
-      <div class="sec-num reveal"><span class="mono sig">03</span><span class="label muted">Доработки</span></div>
+      <div class="sec-num reveal"><span class="mono sig">03</span><span class="label muted">Доработки и развитие</span></div>
       <div class="sec-title reveal">
-        <h2 class="heading-2">Единый прайс для обеих программ</h2>
-        <p class="title-2 muted">Размер и цена назначаются до начала работ. Переключите программу, чтобы увидеть примеры задач.</p>
+        <h2 class="heading-2">Программы развиваются, а не просто поддерживаются</h2>
+        <p class="title-2 muted">Доработки любого размера входят в абонемент. Выполняю ваши заявки и сам предлагаю, что улучшить.</p>
       </div>
     </div>
     <div class="grid">
       <div class="body-col">
+        <ol class="cols-2 clauses stagger body-6" style="gap: 0 var(--s-600); margin-bottom: var(--s-700)">
+          <li><span class="mono">3.1</span><span><b class="body-1">По вашим заявкам.</b><br><span class="muted">Сотрудники ставят задачи в трекер: новый отчёт, выгрузка, поле, раздел. Я оцениваю размер и срок и беру задачу в работу по согласованному приоритету.</span></span></li>
+          <li><span class="mono">3.2</span><span><b class="body-1">По моей инициативе.</b><br><span class="muted">Раз в месяц присылаю список идей: что упростить, ускорить или автоматизировать. Вы выбираете, что делать, и я реализую это в рамках абонемента.</span></span></li>
+        </ol>
+        <div class="sub-h reveal" style="margin-top:0"><h3 class="heading-5">Размеры задач и сроки</h3><span class="label muted">3.3</span></div>
         <div class="seg button-sm reveal" role="tablist" aria-label="Примеры для программы" style="margin-bottom:var(--s-400)">
           <button role="tab" aria-selected="true" data-prog-btn="pp">ProgressPlan</button>
           <button role="tab" aria-selected="false" data-prog-btn="ctrl">Controller</button>
         </div>
         <table class="tbl dev-tbl reveal">
-          <thead class="label muted"><tr><th>Размер</th><th>Цена</th><th>Срок</th><th>Примеры задач</th></tr></thead>
+          <thead class="label muted"><tr><th>Размер</th><th>Что это</th><th>Срок</th><th>Примеры задач</th></tr></thead>
           <tbody>
             <tr>
               <td class="size"><span class="heading-3">S</span></td>
-              <td class="price heading-6 sig">в абонементе</td>
+              <td class="price title-3">Мелкая правка</td>
               <td class="term body-6 mono">до 3 раб. дней</td>
               <td class="ex body-6 muted"><p class="pp">Переименовать поля и подписи, добавить столбец в существующий отчёт и т.п.</p><p class="ctrl">Переименовать поля и подписи, добавить статус замечания, поправить текст шаблона предписания и т.п.</p></td>
             </tr>
             <tr>
               <td class="size"><span class="heading-3">M</span></td>
-              <td class="price heading-6 mono">5 000 ₽</td>
+              <td class="price title-3">Доработка функции</td>
               <td class="term body-6 mono">до 7 раб. дней</td>
               <td class="ex body-6 muted"><p class="pp">Новый фильтр или сортировка, новая выгрузка в Excel, импорт под новый шаблон файла WBS или трудозатрат и т.п.</p><p class="ctrl">Новый фильтр в реестре замечаний, новая выгрузка в Excel или PDF, новое поле в карточке замечания, новое напоминание и т.п.</p></td>
             </tr>
             <tr>
               <td class="size"><span class="heading-3">L</span></td>
-              <td class="price heading-6 mono">10 000 ₽</td>
+              <td class="price title-3">Новая функция</td>
               <td class="term body-6 mono">до 15 раб. дней</td>
               <td class="ex body-6 muted"><p class="pp">Новый отчёт, новый раздел или страница, новая роль с отдельными правами, уведомления по срокам и т.п.</p><p class="ctrl">Новый отчёт по подрядчикам, новый вид документа по шаблону, новая роль, доработка шахматки или обхода технадзора и т.п.</p></td>
             </tr>
             <tr>
               <td class="size"><span class="heading-3">XL</span></td>
-              <td class="price heading-6">договорная<sup class="mono sig">3</sup></td>
-              <td class="term body-6 mono">по смете</td>
+              <td class="price title-3">Крупный модуль<sup class="mono sig">3</sup></td>
+              <td class="term body-6 mono">по плану этапов</td>
               <td class="ex body-6 muted"><p class="pp">Интеграция с 1С или другой системой, новый большой блок учёта и т.п.</p><p class="ctrl">Интеграция с другой системой, новый большой раздел и т.п.</p></td>
             </tr>
           </tbody>
         </table>
         <ol class="footnotes body-6 stagger">
-          <li><sup>1</sup><span><b>Срочно.</b> <span class="muted">Вне очереди, в половину срока: +50% к цене задачи.</span></span></li>
-          <li><sup>2</sup><span><b>Задача на обе программы.</b> <span class="muted">Например, обмен данными между ними. Оценивается как одна задача по общему объёму.</span></span></li>
-          <li><sup>3</sup><span><b>XL по частям.</b> <span class="muted">Смета разбивается на задачи S, M и L, каждая принимается и оплачивается отдельно.</span></span></li>
+          <li><sup>1</sup><span><b>Приоритеты.</b> <span class="muted">Задачи идут в работу в порядке, который я согласую с вашим ответственным. Срочное поднимаю в начало очереди.</span></span></li>
+          <li><sup>2</sup><span><b>Задача на обе программы.</b> <span class="muted">Например, обмен данными между ними. Считается одной задачей по общему объёму.</span></span></li>
+          <li><sup>3</sup><span><b>XL по частям.</b> <span class="muted">Крупный модуль делю на этапы S, M и L, каждый сдаётся отдельно, чтобы вы видели результат по ходу работы.</span></span></li>
         </ol>
       </div>
     </div>
@@ -766,23 +773,23 @@
     <div class="grid sec-head">
       <div class="sec-num reveal"><span class="mono sig">04</span><span class="label muted">Порядок работы</span></div>
       <div class="sec-title reveal">
-        <h2 class="heading-2">Работа начинается только после согласования цены</h2>
-        <p class="title-2 muted">Порядок одинаковый для обеих программ. Ни одна задача не попадает в акт без вашей приёмки.</p>
+        <h2 class="heading-2">От заявки или идеи до готовой функции</h2>
+        <p class="title-2 muted">Порядок одинаковый для обеих программ. Вы всегда знаете, что в работе и когда будет готово.</p>
       </div>
     </div>
     <div class="grid">
       <div class="body-col">
         <div class="process" id="flow">
           <span class="track" aria-hidden="true"></span>
-          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.1</span><h3 class="title-3">Заявка</h3><p class="body-6 muted">Вы ставите задачу в трекере</p></div>
-          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.2</span><h3 class="title-3">Оценка</h3><p class="body-6 muted">Размер, цена и срок в течение 1 рабочего дня</p></div>
-          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.3</span><h3 class="title-3">Согласование</h3><p class="body-6 muted">Без вашего «да» работа не начинается</p></div>
-          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.4</span><h3 class="title-3">Выполнение</h3><p class="body-6 muted">В согласованный срок</p></div>
-          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.5</span><h3 class="title-3">Приёмка и акт</h3><p class="body-6 muted">Вы проверяете, задача попадает в акт месяца</p></div>
+          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.1</span><h3 class="title-3">Заявка или идея</h3><p class="body-6 muted">Ваша задача в трекере или моё предложение</p></div>
+          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.2</span><h3 class="title-3">Оценка</h3><p class="body-6 muted">Размер и срок в течение 1 рабочего дня</p></div>
+          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.3</span><h3 class="title-3">Приоритет</h3><p class="body-6 muted">Вместе решаем, что делаем в первую очередь</p></div>
+          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.4</span><h3 class="title-3">Выполнение</h3><p class="body-6 muted">В названный срок</p></div>
+          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.5</span><h3 class="title-3">Приёмка</h3><p class="body-6 muted">Вы проверяете, задача попадает в отчёт месяца</p></div>
         </div>
         <ol class="footnotes body-6 stagger" style="margin-top:var(--s-700)">
-          <li><sup>↺</sup><span><b>Не согласовали цену.</b> <span class="muted">Уточняем задачу и оцениваем заново.</span></span></li>
-          <li><sup>↺</sup><span><b>Есть замечания.</b> <span class="muted">Задача возвращается в работу без доплаты.</span></span></li>
+          <li><sup>↺</sup><span><b>Задача неясна.</b> <span class="muted">Уточняю у автора заявки, что именно нужно, и оцениваю заново.</span></span></li>
+          <li><sup>↺</sup><span><b>Есть замечания.</b> <span class="muted">Задача возвращается в работу и доводится до результата.</span></span></li>
           <li><sup>3д</sup><span><b>Срок проверки.</b> <span class="muted">Нет замечаний за 3 рабочих дня, задача считается принятой.</span></span></li>
         </ol>
       </div>
@@ -796,13 +803,16 @@
     <div class="rule-top"></div>
     <div class="grid sec-head">
       <div class="sec-num reveal"><span class="mono sig">05</span><span class="label muted">Ошибка или доработка</span></div>
-      <div class="sec-title reveal"><h2 class="heading-2">Одно правило вместо споров</h2></div>
+      <div class="sec-title reveal">
+        <h2 class="heading-2">Ошибки вне очереди, доработки по плану</h2>
+        <p class="title-2 muted">И то и другое входит в абонемент. Разница только в том, как быстро я за это берусь.</p>
+      </div>
     </div>
     <div class="grid">
       <div class="body-col">
         <div class="rule-box reveal">
-          <div><span class="label muted">Ошибка · бесплатно</span><p class="heading-5">Работает не так, как было согласовано</p></div>
-          <div><span class="label sig">Доработка · по прайсу</span><p class="heading-5">Хотим, чтобы работало иначе</p></div>
+          <div><span class="label muted">Ошибка · вне очереди</span><p class="heading-5">Работает не так, как было задумано</p></div>
+          <div><span class="label sig">Доработка · по приоритету</span><p class="heading-5">Хотим, чтобы работало иначе или появилось новое</p></div>
         </div>
         <div class="seg button-sm reveal" role="tablist" aria-label="Фильтр по программе" id="cmpTabs" style="margin-bottom:var(--s-300)">
           <button role="tab" aria-selected="true" data-f="all">Все</button>
@@ -819,7 +829,7 @@
             <tr data-p="both"><td class="who mono muted">Обе</td><td><span class="lbl label muted">Ошибка</span>Кнопка не срабатывает, страница не открывается</td><td><span class="lbl label sig">Доработка</span>Хочется другой вид или новая кнопка</td></tr>
           </tbody>
         </table>
-        <div class="note-line body-6"><span class="mono">§</span><span class="muted">Если мнения расходятся, смотрим на письменное согласование задачи или на поведение программы на момент передачи. Поэтому все задачи фиксируются в трекере.</span></div>
+        <div class="note-line body-6"><span class="mono">§</span><span class="muted">Ошибки исправляю в сроки из раздела 2.8. Доработки беру в работу по согласованному приоритету и сроку из раздела 3.3.</span></div>
       </div>
     </div>
   </div>
@@ -831,40 +841,31 @@
     <div class="rule-top"></div>
     <div class="grid sec-head">
       <div class="sec-num reveal"><span class="mono sig">06</span><span class="label muted">Отчётность</span></div>
-      <div class="sec-title reveal"><h2 class="heading-2">Всё, что вы оплачиваете, можно проверить</h2></div>
+      <div class="sec-title reveal">
+        <h2 class="heading-2">Вы видите, что сделано за ваши деньги</h2>
+        <p class="title-2 muted">Сумма каждый месяц одна и та же, а список сделанного прозрачен и проверяем.</p>
+      </div>
     </div>
     <div class="grid report">
       <ol class="report-left clauses stagger body-6">
-        <li><span class="mono">6.1</span><span><b>Трекер задач</b> (Яндекс Трекер, Kaiten или аналог) с доступом для вашего ответственного: программа, автор, размер, цена, срок, статус</span></li>
+        <li><span class="mono">6.1</span><span><b>Трекер задач</b> (Яндекс Трекер, Kaiten или аналог) с доступом для вашего ответственного: программа, автор, размер, срок, статус</span></li>
         <li><span class="mono">6.2</span><span><b>Список изменений</b> к каждой новой версии каждой программы</span></li>
         <li><span class="mono">6.3</span><span><b>Журнал обращений:</b> дата, программа, вопрос, когда решено</span></li>
-        <li><span class="mono">6.4</span><span><b>Один ежемесячный акт</b> на обе программы, каждая строка ссылается на задачу в трекере</span></li>
+        <li><span class="mono">6.4</span><span><b>Отчёт за месяц</b> вместе с актом: что сделано, что в работе, какие идеи предлагаю дальше</span></li>
       </ol>
       <div class="act-card reveal" aria-labelledby="calcTitle">
-        <div class="act-head"><h3 class="heading-6" id="calcTitle">Акт за месяц</h3><span class="label muted">Калькулятор</span></div>
+        <div class="act-head"><h3 class="heading-6" id="calcTitle">Отчёт за месяц</h3><span class="label muted">Пример</span></div>
         <div class="ctrl-row">
           <span class="title-3">Абонемент</span>
           <div class="seg button-sm" role="tablist" aria-label="Абонемент" id="planTabs">
-            <button role="tab" aria-selected="false" data-plan="pp">PP</button>
+            <button role="tab" aria-selected="false" data-plan="pp">ProgressPlan</button>
             <button role="tab" aria-selected="false" data-plan="ctrl">Controller</button>
             <button role="tab" aria-selected="true" data-plan="both">Обе</button>
           </div>
         </div>
-        <div class="ctrl-row">
-          <div><div class="title-3">Задачи M</div><div class="caption-5 muted mono">5 000 ₽ / шт.</div></div>
-          <div class="stepper"><button data-step="m" data-d="-1" aria-label="Меньше задач M"><i class="ph ph-minus"></i></button><output class="body-4 mono" id="mOut">1</output><button data-step="m" data-d="1" aria-label="Больше задач M"><i class="ph ph-plus"></i></button></div>
-        </div>
-        <div class="ctrl-row">
-          <div><div class="title-3">Задачи L</div><div class="caption-5 muted mono">10 000 ₽ / шт.</div></div>
-          <div class="stepper"><button data-step="l" data-d="-1" aria-label="Меньше задач L"><i class="ph ph-minus"></i></button><output class="body-4 mono" id="lOut">1</output><button data-step="l" data-d="1" aria-label="Больше задач L"><i class="ph ph-plus"></i></button></div>
-        </div>
-        <div class="ctrl-row">
-          <div><label class="title-3" for="xlIn">Задачи XL</label><div class="caption-5 muted">сумма по согласованной смете</div></div>
-          <div class="xl-field"><input id="xlIn" class="body-4 mono" type="text" inputmode="numeric" placeholder="0" autocomplete="off" aria-describedby="xlErr"><span class="body-6 muted">₽</span></div>
-        </div>
-        <p class="caption-5 xl-err" id="xlErr" role="alert"></p>
         <div class="act-lines body-6" id="act" aria-live="polite"></div>
-        <div class="act-total"><span class="title-2">Итого</span><span class="heading-3" id="total">65 000 ₽</span></div>
+        <div class="act-total"><span class="title-2">К оплате</span><span class="heading-3" id="total">50 000 ₽</span></div>
+        <p class="caption-5 muted" style="margin-top:var(--s-75)">Сколько бы задач ни было сделано, сумма не меняется.</p>
         <div class="sign caption-5 muted"><span>Исполнитель</span><span>Заказчик</span></div>
       </div>
     </div>
@@ -883,8 +884,9 @@
       <ol class="body-col cols-2 clauses stagger body-6" style="gap: 0 var(--s-600)">
         <li><span class="mono">7.1</span><span><b class="body-1">Пакетная цена.</b><br><span class="muted">50 000 ₽ в месяц действует, пока на сопровождении обе программы. Если одна снимается с сопровождения, абонемент на оставшуюся составляет 30 000 ₽ в месяц.</span></span></li>
         <li><span class="mono">7.2</span><span><b class="body-1">Оформление.</b><br><span class="muted">Один договор оказания услуг с абонентской платой на обе программы. Исполнитель самозанятый: чек на каждую оплату, налоги и взносы за исполнителя компания не платит.</span></span></li>
-        <li><span class="mono">7.3</span><span><b class="body-1">Оплата.</b><br><span class="muted">Абонемент в начале месяца. Доработки по акту в конце месяца, в течение 5 рабочих дней после подписания. Задачи XL по этапам сметы.</span></span></li>
-        <li><span class="mono">7.4</span><span><b class="body-1">Права на доработки.</b><br><span class="muted">Неисключительные права на новый код переходят к заказчику после оплаты, как и по договорам продажи программ. Код хранится у заказчика.</span></span></li>
+        <li><span class="mono">7.3</span><span><b class="body-1">Оплата.</b><br><span class="muted">Абонемент в начале месяца. Других платежей нет: доработки и новые функции любого размера входят в абонемент.</span></span></li>
+        <li><span class="mono">7.4</span><span><b class="body-1">Права на доработки.</b><br><span class="muted">Неисключительные права на новый код переходят к заказчику, как и по договорам продажи программ. Код хранится у заказчика.</span></span></li>
+        <li><span class="mono">7.8</span><span><b class="body-1">Очерёдность задач.</b><br><span class="muted">Ошибки исправляются вне очереди. Доработки выполняются по приоритету, согласованному с ответственным со стороны заказчика.</span></span></li>
         <li><span class="mono">7.5</span><span><b class="body-1">Конфиденциальность.</b><br><span class="muted">Данные проектов и доступы не передаются третьим лицам.</span></span></li>
         <li><span class="mono">7.6</span><span><b class="body-1">Пробный период 3 месяца.</b><br><span class="muted">При необходимости по его итогам цены и состав абонемента можно скорректировать по договорённости сторон. Дальше цены пересматриваются не чаще 1 раза в год с предупреждением за месяц.</span></span></li>
         <li><span class="mono">7.7</span><span><b class="body-1">Расторжение.</b><br><span class="muted">Любая сторона может завершить сотрудничество по одной или обеим программам, предупредив за 14 дней. Начатые задачи завершаются или передаются с описанием.</span></span></li>
@@ -902,12 +904,12 @@
       <h2 class="heading-2">Коротко о главном</h2>
     </div>
     <div class="faq reveal">
-      <details><summary class="title-2"><span class="mono body-6">8.1</span>Сколько обращений входит в абонемент?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Количество обращений и часы не считаются. Консультации, обучение, загрузка данных, мелкие правки и исправление ошибок входят в абонемент полностью.</p></details>
-      <details><summary class="title-2"><span class="mono body-6">8.2</span>Что будет, если задача окажется сложнее оценки?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Цена не растёт. Размер и цена фиксируются до начала работ, и риск ошибиться в оценке лежит на мне.</p></details>
-      <details><summary class="title-2"><span class="mono body-6">8.3</span>Как понять, это ошибка или доработка?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Работает не так, как было согласовано, значит ошибка, и она исправляется бесплатно. Хотим, чтобы работало иначе, значит доработка по прайсу.</p></details>
+      <details><summary class="title-2"><span class="mono body-6">8.1</span>Сколько обращений входит в абонемент?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Количество обращений и часы не считаются. Консультации, обучение, загрузка данных, исправление ошибок и доработки входят в абонемент полностью.</p></details>
+      <details><summary class="title-2"><span class="mono body-6">8.2</span>Доработки точно не оплачиваются отдельно?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Да. Задачи любого размера, от мелкой правки до крупного модуля, входят в абонемент. Размер задачи нужен только для того, чтобы вы понимали срок.</p></details>
+      <details><summary class="title-2"><span class="mono body-6">8.3</span>Вы только выполняете заявки?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Нет. Помимо заявок ваших сотрудников я сам предлагаю улучшения: раз в месяц присылаю список идей, вы выбираете, что делать, и я это реализую.</p></details>
       <details><summary class="title-2"><span class="mono body-6">8.4</span>Можно оставить на сопровождении только одну программу?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Да. Абонемент на одну программу стоит 30 000 ₽ в месяц, пакетная цена 50 000 ₽ действует, пока на сопровождении обе.</p></details>
       <details><summary class="title-2"><span class="mono body-6">8.5</span>Как быстро вы отвечаете?<i class="ph ph-plus"></i></summary><p class="body-6 muted">В рабочие дни с 8:00 до 18:00. Если программа не открывается у всех, ответ в течение 2 часов и решение в тот же день. Остальные обращения в течение рабочего дня.</p></details>
-      <details><summary class="title-2"><span class="mono body-6">8.6</span>Кому принадлежит код доработок?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Неисключительные права на новый код переходят к вам после оплаты, как и по договорам продажи программ. Код хранится у вас.</p></details>
+      <details><summary class="title-2"><span class="mono body-6">8.6</span>Кому принадлежит код доработок?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Неисключительные права на новый код переходят к вам, как и по договорам продажи программ. Код хранится у вас.</p></details>
       <details><summary class="title-2"><span class="mono body-6">8.7</span>Как прекратить сотрудничество?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Предупредить за 14 дней. Это можно сделать по одной программе или по обеим. Начатые задачи завершаются или передаются с описанием.</p></details>
     </div>
   </div>
@@ -919,7 +921,7 @@
   <div class="wrap grid">
     <span class="label" style="grid-column:1/-1;margin-bottom:var(--s-300)">Следующий шаг</span>
     <h2 class="heading-1 reveal">Начнём с пробных трёх месяцев<span class="acc">.</span></h2>
-    <p class="lead title-2 reveal">Обе программы за 50 000 ₽ в месяц. Если по итогам пробного периода понадобятся изменения, цены и состав абонемента можно будет скорректировать.</p>
+    <p class="lead title-2 reveal">Обе программы за 50 000 ₽ в месяц, доработки и развитие уже внутри. Если по итогам пробного периода понадобятся изменения, цены и состав абонемента можно будет скорректировать.</p>
     <div class="contacts reveal" id="contacts"></div>
     <div class="who label"><span id="contactName">Разработчик ProgressPlan и Controller</span><span class="mono">КП / 2026 / 11</span></div>
   </div>
@@ -1072,22 +1074,24 @@
       });
     });
 
-    /* Calculator */
+    /* Отчёт за месяц (пример) */
     var PLANS = { pp: ['Абонемент ProgressPlan', 30000], ctrl: ['Абонемент Controller', 30000], both: ['Абонемент ProgressPlan и Controller', 50000] };
-    var state = { plan: 'both', m: 1, l: 1, xl: 0 };
-    var shown = 65000;
+    var TASKS = {
+      pp: [['L', 'ProgressPlan', 'Новый отчёт по срокам'], ['M', 'ProgressPlan', 'Выгрузка в Excel'], ['S', 'ProgressPlan', 'Столбец в отчёте']],
+      ctrl: [['L', 'Controller', 'Новый вид документа'], ['M', 'Controller', 'Фильтр в реестре замечаний'], ['S', 'Controller', 'Новый статус замечания']],
+      both: [['L', 'ProgressPlan', 'Новый отчёт по срокам'], ['M', 'Controller', 'Фильтр в реестре замечаний'], ['M', 'ProgressPlan', 'Выгрузка в Excel'], ['S', 'Controller', 'Новый статус замечания']]
+    };
+    var state = { plan: 'both' };
+    var shown = 50000;
     var actEl = document.getElementById('act'), totalEl = document.getElementById('total');
-    function line(name, sum) { return '<div class="act-line"><span>' + name + '</span><b class="mono">' + fmt(sum) + ' ₽</b></div>'; }
     function render() {
       var p = PLANS[state.plan];
-      var html = line(p[0], p[1]);
-      if (state.m) html += line('Задачи M × ' + state.m, state.m * 5000);
-      if (state.l) html += line('Задачи L × ' + state.l, state.l * 10000);
-      if (state.xl) html += line('Задачи XL по смете', state.xl);
+      var html = TASKS[state.plan].map(function (t) {
+        return '<div class="act-line"><span><span class="mono muted">' + t[0] + '</span>&nbsp;&nbsp;' + t[2] + ' <span class="muted">· ' + t[1] + '</span></span><b class="sig">входит</b></div>';
+      }).join('');
+      html += '<div class="act-line"><span><b>' + p[0] + '</b></span><b class="mono">' + fmt(p[1]) + ' ₽</b></div>';
       actEl.innerHTML = html;
-      document.getElementById('mOut').textContent = state.m;
-      document.getElementById('lOut').textContent = state.l;
-      var target = p[1] + state.m * 5000 + state.l * 10000 + state.xl;
+      var target = p[1];
       if (reduce) { totalEl.textContent = fmt(target) + ' ₽'; shown = target; return; }
       var from = shown, t0 = null;
       var anim = function (t) {
@@ -1105,24 +1109,6 @@
         state.plan = b.getAttribute('data-plan');
         render();
       });
-    });
-    document.querySelectorAll('[data-step]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        var k = b.getAttribute('data-step');
-        state[k] = Math.max(0, Math.min(20, state[k] + +b.getAttribute('data-d')));
-        render();
-      });
-    });
-    var xlIn = document.getElementById('xlIn'), xlErr = document.getElementById('xlErr');
-    xlIn.addEventListener('input', function () {
-      var raw = xlIn.value.replace(/[\s ]/g, '');
-      var bad = raw !== '' && !/^\d+$/.test(raw);
-      var num = bad || raw === '' ? 0 : Math.min(+raw, 99999999);
-      xlIn.parentNode.classList.toggle('bad', bad);
-      xlErr.textContent = bad ? 'Введите сумму цифрами, например 40000' : '';
-      if (!bad) xlIn.value = raw === '' ? '' : fmt(num);
-      state.xl = num;
-      render();
     });
     render();
 
