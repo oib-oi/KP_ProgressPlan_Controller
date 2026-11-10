@@ -1,0 +1,1168 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сопровождение ProgressPlan и Controller</title>
+<meta name="description" content="Коммерческое предложение: сопровождение и развитие ProgressPlan и Controller. Один абонемент на обе программы и фиксированные цены на доработки.">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Сопровождение ProgressPlan и Controller">
+<meta property="og:description" content="Один абонемент на обе программы: 50 000 ₽ в месяц вместо 60 000 ₽.">
+<meta name="theme-color" content="#F2F1EC">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%239FCFAE'/%3E%3Cpath d='M8 24V8h16' stroke='%230E0E0C' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script>
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('kp-theme-v2'); } catch (e) {}
+    if (!t) t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<style>
+  :root {
+    --s-25: 2px; --s-50: 4px; --s-75: 8px; --s-100: 12px; --s-200: 16px; --s-300: 24px;
+    --s-400: 32px; --s-500: 40px; --s-600: 48px; --s-700: 64px; --s-800: 80px; --s-900: 96px;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --maxw: 1280px;
+    --mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  }
+  :root[data-theme="light"] {
+    --bg: #F2F1EC;
+    --paper: #F8F7F3;
+    --ink: #0E0E0C;
+    --muted: #6B6A63;
+    --rule: rgba(14, 14, 12, 0.14);
+    --rule-strong: #0E0E0C;
+    --sig: #9FCFAE;
+    --sig-ink: #0E0E0C;
+    --sig-text: #2E6A4A;
+    --tint: rgba(14, 14, 12, 0.045);
+    --best-bg: #0E0E0C; --best-fg: #F2F1EC; --best-muted: rgba(242, 241, 236, 0.62); --best-acc: #9FCFAE;
+    --h-from: #000000; --h-to: #666666;
+    --dim: rgba(14, 14, 12, 0.2);
+    --nav: rgba(242, 241, 236, 0.78);
+    --panel: rgba(242, 241, 236, 0.96);
+    --deep: #24402F;
+    --on-deep: #F2F1EC;
+    --on-deep-muted: rgba(242, 241, 236, 0.66);
+    --deep-line: rgba(242, 241, 236, 0.22);
+    --deep-acc: #9FCFAE;
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --bg: #181818;
+    --paper: #1F1F1F;
+    --ink: #EDEBE3;
+    --muted: #8F8D85;
+    --rule: rgba(237, 235, 227, 0.14);
+    --rule-strong: #EDEBE3;
+    --sig: #8EC49F;
+    --sig-ink: #0E0E0C;
+    --sig-text: #9FD1AE;
+    --tint: rgba(237, 235, 227, 0.05);
+    --best-bg: #EDEBE3; --best-fg: #0E0E0C; --best-muted: rgba(14, 14, 12, 0.6); --best-acc: #2E6A4A;
+    --h-from: #FFFFFF; --h-to: #9B9B9B;
+    --dim: rgba(237, 235, 227, 0.2);
+    --nav: rgba(24, 24, 24, 0.78);
+    --panel: rgba(24, 24, 24, 0.96);
+    --deep: #1D3627;
+    --on-deep: #EDEBE3;
+    --on-deep-muted: rgba(237, 235, 227, 0.62);
+    --deep-line: rgba(237, 235, 227, 0.18);
+    --deep-acc: #9FD1AE;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Manrope', system-ui, sans-serif; font-size: 16px; line-height: 24px;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    transition: background-color 300ms var(--ease), color 300ms var(--ease);
+  }
+  h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+  p { margin: 0; text-wrap: pretty; }
+  ul, ol { margin: 0; padding: 0; list-style: none; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+  ::selection { background: var(--sig); color: var(--sig-ink); }
+  :focus-visible { outline: 2px solid var(--sig); outline-offset: 3px; }
+
+  /* Text styles */
+  .heading-1 { font-size: 96px; line-height: 1; font-weight: 600; letter-spacing: -0.045em; }
+  .heading-2 { font-size: 48px; line-height: 48px; font-weight: 600; letter-spacing: -0.03em; }
+  .heading-3 { font-size: 36px; line-height: 40px; font-weight: 600; letter-spacing: -0.025em; }
+  .heading-4 { font-size: 30px; line-height: 36px; font-weight: 600; letter-spacing: -0.02em; }
+  .heading-5 { font-size: 24px; line-height: 32px; font-weight: 600; letter-spacing: -0.01em; }
+  .heading-6 { font-size: 20px; line-height: 28px; font-weight: 600; }
+  .title-2 { font-size: 18px; line-height: 28px; font-weight: 500; }
+  .title-3 { font-size: 16px; line-height: 24px; font-weight: 500; }
+  .body-1 { font-size: 16px; line-height: 24px; font-weight: 600; }
+  .body-3 { font-size: 16px; line-height: 24px; font-weight: 400; }
+  .body-4 { font-size: 14px; line-height: 20px; font-weight: 600; }
+  .body-6 { font-size: 14px; line-height: 20px; font-weight: 400; }
+  .button-md { font-size: 16px; line-height: 24px; font-weight: 600; }
+  .button-sm { font-size: 14px; line-height: 20px; font-weight: 600; }
+  .caption-4 { font-size: 12px; line-height: 16px; font-weight: 500; }
+  .caption-5 { font-size: 12px; line-height: 16px; font-weight: 400; }
+  .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; letter-spacing: 0; }
+  .label { font-family: var(--mono); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
+  .muted { color: var(--muted); }
+  .sig { color: var(--sig-text); }
+
+  .skip { position: absolute; left: var(--s-200); top: -64px; z-index: 100; background: var(--sig); color: var(--sig-ink); padding: var(--s-75) var(--s-100); transition: transform 300ms var(--ease); }
+  .skip:focus { transform: translateY(80px); }
+
+  .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 var(--s-400); }
+  .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--s-300); }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: var(--s-75);
+    padding: var(--s-75) var(--s-100); border-radius: 4px; white-space: nowrap;
+    transition: transform 300ms var(--ease), background-color 300ms var(--ease), color 300ms var(--ease), opacity 300ms var(--ease);
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-sig { background: var(--sig); color: var(--sig-ink); }
+  .btn-sig:hover { transform: translateY(-2px); }
+  .btn-ink { background: var(--ink); color: var(--bg); }
+  .btn-ink:hover { transform: translateY(-2px); }
+  .btn-line { border: 1px solid var(--rule-strong); }
+  .btn-line:hover { background: var(--ink); color: var(--bg); }
+  .btn-lg { padding: var(--s-100) var(--s-300); }
+  .btn i { transition: transform 500ms var(--ease); }
+  .btn:hover i.ph-arrow-down-right, .btn:hover i.ph-arrow-right { transform: translate(2px, 2px); }
+  .btn[aria-disabled="true"] { opacity: 0.4; pointer-events: none; }
+
+  /* Nav */
+  .nav {
+    position: fixed; top: var(--s-200); left: 50%; z-index: 50; transform: translateX(-50%);
+    display: flex; align-items: center; gap: var(--s-50);
+    padding: var(--s-50); background: var(--nav);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid var(--rule); border-radius: 6px;
+    max-width: calc(100% - var(--s-400));
+  }
+  .brand { display: inline-flex; align-items: center; gap: var(--s-75); padding: 0 var(--s-100) 0 var(--s-75); white-space: nowrap; }
+  .brand-mark { width: 16px; height: 16px; background: var(--sig); }
+  .nav-links { display: flex; }
+  .nav-links a { display: inline-flex; gap: var(--s-75); padding: var(--s-75) var(--s-100); border-radius: 4px; color: var(--muted); white-space: nowrap; transition: color 300ms var(--ease), background-color 300ms var(--ease); }
+  .nav-links a .mono { opacity: 0.6; }
+  .nav-links a:hover, .nav-links a.is-active { color: var(--ink); background: var(--tint); }
+  .nav-links a.is-active .mono { color: var(--sig-text); opacity: 1; }
+  .icon-btn { width: 36px; height: 36px; border-radius: 4px; display: grid; place-items: center; position: relative; overflow: hidden; transition: background-color 300ms var(--ease), transform 300ms var(--ease); }
+  .icon-btn:hover { background: var(--tint); }
+  .icon-btn:active { transform: scale(0.94); }
+  .theme-ico { position: absolute; font-size: 18px; transition: transform 500ms var(--ease), opacity 300ms var(--ease); }
+  [data-theme="dark"] .ico-moon { transform: translateY(120%); opacity: 0; }
+  [data-theme="light"] .ico-sun { transform: translateY(-120%); opacity: 0; }
+  .burger { display: none; }
+  .burger span { position: absolute; left: 10px; width: 16px; height: 2px; background: var(--ink); transition: transform 500ms var(--ease), opacity 300ms var(--ease); }
+  .burger span:nth-child(1) { transform: translateY(-4px); }
+  .burger span:nth-child(2) { transform: translateY(4px); }
+  .menu-open .burger span:nth-child(1) { transform: rotate(45deg); }
+  .menu-open .burger span:nth-child(2) { transform: rotate(-45deg); }
+  .m-panel {
+    position: fixed; inset: 0; z-index: 40; background: var(--panel);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    padding: 104px var(--s-300) var(--s-400); display: flex; flex-direction: column;
+    opacity: 0; pointer-events: none; transition: opacity 500ms var(--ease);
+  }
+  .menu-open .m-panel { opacity: 1; pointer-events: auto; }
+  .m-panel a { display: flex; align-items: baseline; gap: var(--s-200); padding: var(--s-200) 0; border-bottom: 1px solid var(--rule); opacity: 0; transform: translateY(24px); transition: transform 500ms var(--ease), opacity 500ms var(--ease); }
+  .m-panel a .mono { color: var(--sig-text); }
+  .menu-open .m-panel a { opacity: 1; transform: none; }
+
+  /* Hero */
+  .hero { padding: 152px 0 var(--s-800); }
+  .doc-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-200); padding-bottom: var(--s-200); border-bottom: 1px solid var(--rule-strong); }
+  .doc-meta span { display: inline-flex; gap: var(--s-75); }
+  .hero-title { grid-column: 1 / span 9; margin-top: var(--s-700); }
+  .hero-title h1 { max-width: 980px; }
+  .hero-title .ln { display: block; overflow: hidden; padding-bottom: 0.08em; }
+  .hero-title .ln > span {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--h-from), var(--h-to));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    transform: translateY(105%); transition: transform 1000ms var(--ease);
+  }
+  .hero-title .ln:nth-child(2) > span { transition-delay: 120ms; }
+  .loaded .hero-title .ln > span { transform: none; }
+  .hero-title .ln .dot { color: var(--sig-text); -webkit-text-fill-color: var(--sig-text); }
+  .hero-side { grid-column: 10 / span 3; margin-top: var(--s-700); align-self: end; }
+  .hero-bottom { margin-top: var(--s-500); align-items: start; }
+  .hero-title { grid-column: 1 / -1 !important; }
+  .hero-copy { grid-column: 1 / span 7; }
+  @media (max-width: 1100px) { .hero-copy { grid-column: 1 / -1; } }
+  .hero-lead { grid-column: 1 / span 6; max-width: 680px; }
+  .hero-cta { grid-column: 1 / span 6; display: flex; flex-wrap: wrap; gap: var(--s-200); align-items: center; margin-top: var(--s-400); }
+
+  .spec { grid-column: 8 / span 5; position: relative; padding: var(--s-300); background: var(--paper); border: 1px solid var(--rule); }
+  .spec::before, .spec::after, .spec .cm::before, .spec .cm::after { content: ""; position: absolute; width: 12px; height: 12px; border-color: var(--rule-strong); border-style: solid; }
+  .spec::before { left: -7px; top: -7px; border-width: 1px 0 0 1px; }
+  .spec::after { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+  .spec .cm::before { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; }
+  .spec .cm::after { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+  .spec-head { display: flex; justify-content: space-between; padding-bottom: var(--s-100); border-bottom: 1px solid var(--rule-strong); }
+  .spec-row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-200); padding: var(--s-100) 0; border-bottom: 1px solid var(--rule); }
+  .spec-row:last-child { border-bottom: 0; padding-bottom: 0; }
+  .spec-row b { font-weight: 500; white-space: nowrap; }
+  .spec-row.hl b { color: var(--sig-text); }
+
+  /* Sections */
+  .sec { padding: var(--s-300) 0 var(--s-900); scroll-margin-top: 72px; }
+  .rule-top { height: 1px; background: var(--rule-strong); transform-origin: left; transform: scaleX(0); transition: transform 1200ms var(--ease); }
+  .rule-top.in { transform: scaleX(1); }
+  .sec-head { margin-top: var(--s-300); margin-bottom: var(--s-700); }
+  .sec-num { grid-column: 1 / span 3; display: flex; flex-direction: column; gap: var(--s-75); }
+  .sec-num .mono { font-size: 14px; line-height: 20px; }
+  .sec-title { grid-column: 4 / span 9; }
+  .sec-title p { margin-top: var(--s-200); max-width: 680px; }
+  .body-col { grid-column: 4 / span 9; }
+
+  /* Tables */
+  .tbl { width: 100%; border-collapse: collapse; }
+  .tbl th { text-align: left; padding: 0 0 var(--s-100); border-bottom: 1px solid var(--rule-strong); font-weight: 500; }
+  .tbl td { padding: var(--s-200) 0; border-bottom: 1px solid var(--rule); vertical-align: top; transition: border-color 300ms var(--ease); }
+  .tbl .num { text-align: right; white-space: nowrap; }
+  .tbl tbody tr:hover td { border-bottom-color: var(--rule-strong); }
+  .plans tbody tr.best:hover td { border-bottom-color: var(--deep); }
+
+  .plans td:first-child { position: relative; padding-left: var(--s-300); }
+  .plans tr > :last-child { padding-right: var(--s-200); }
+  .plans tbody td:first-child::before { content: ""; position: absolute; left: 0; top: 50%; width: 8px; height: 8px; margin-top: -4px; background: var(--rule-strong); opacity: 0.25; transition: transform 500ms var(--ease), opacity 300ms var(--ease); }
+  .plans tbody tr:hover td:first-child::before { transform: scale(1.4); opacity: 1; }
+  .plans tr.best td { background: var(--deep); color: var(--on-deep); border-bottom-color: var(--deep); }
+  .plans { border-collapse: separate; border-spacing: 0; }
+  .plans tbody tr:nth-child(2) td { border-bottom-color: transparent; }
+  .plans tr.best td.heading-5 { color: var(--deep-acc); }
+  .plans tbody tr.best td:first-child::before { background: var(--deep-acc); opacity: 1; }
+  .plans tr.best .muted { color: var(--on-deep-muted); }
+  .plans tr.best:hover { background: none; }
+  .plans td { padding-left: 0; padding-right: var(--s-200); vertical-align: middle; }
+  .plans td.num { padding-right: var(--s-200); }
+  .plans .pname { display: block; }
+  .plans tfoot td { border-bottom: 0; padding-top: var(--s-300); }
+  .save-chip { display: inline-block; padding: var(--s-25) var(--s-75); border: 1px solid var(--sig-text); color: var(--sig-text); }
+
+  .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-600); }
+  .clauses li { display: grid; grid-template-columns: 48px 1fr; gap: var(--s-200); padding: var(--s-200) 0; border-bottom: 1px solid var(--rule); }
+  .clauses li:first-child { border-top: 1px solid var(--rule-strong); }
+  .clauses .mono { color: var(--muted); }
+  .clauses li:hover .mono { color: var(--sig-text); }
+  .clauses .mono { transition: color 300ms var(--ease); }
+  .sub-h { display: flex; justify-content: space-between; align-items: baseline; margin: var(--s-700) 0 var(--s-300); }
+
+  .ref-table td:first-child { width: 28%; padding-right: var(--s-300); color: var(--muted); }
+  .ref-table td { padding-right: var(--s-300); }
+
+  .note-line { display: flex; gap: var(--s-200); align-items: baseline; padding: var(--s-200) 0; border-top: 1px solid var(--rule-strong); margin-top: var(--s-500); }
+  .note-line .mono { color: var(--sig-text); }
+
+  /* Segmented */
+  .seg { display: inline-flex; border: 1px solid var(--rule-strong); border-radius: 4px; overflow: hidden; }
+  .seg button { padding: var(--s-75) var(--s-200); color: var(--muted); transition: background-color 300ms var(--ease), color 300ms var(--ease); }
+  .seg button + button { border-left: 1px solid var(--rule-strong); }
+  .seg button:hover { color: var(--ink); background: var(--tint); }
+  .seg button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+
+  /* Dev */
+  .dev-tbl td { padding-right: var(--s-300); }
+  .dev-tbl .size { width: 96px; }
+  .dev-tbl .size .heading-3 { display: block; transition: transform 500ms var(--ease), color 300ms var(--ease); }
+  .dev-tbl tbody tr:hover .size .heading-3 { transform: translateX(8px); color: var(--sig-text); }
+  .dev-tbl .price { width: 22%; }
+  .dev-tbl .term { width: 18%; }
+  .dev-tbl .ex p { display: none; }
+  [data-prog="pp"] .dev-tbl .ex .pp, [data-prog="ctrl"] .dev-tbl .ex .ctrl { display: block; animation: fadeUp 500ms var(--ease); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .footnotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-300); margin-top: var(--s-500); }
+  .footnotes li { display: grid; grid-template-columns: 24px 1fr; gap: var(--s-75); }
+  .footnotes sup { font-family: var(--mono); font-size: 12px; line-height: 16px; color: var(--sig-text); }
+
+  /* Process */
+  .process { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); }
+  .process .track { position: absolute; left: 0; right: 0; top: 7px; height: 1px; background: var(--rule); }
+  .process .track::after { content: ""; position: absolute; inset: 0; background: var(--sig-text); transform: scaleX(0); transform-origin: left; transition: transform 1800ms var(--ease) 200ms; }
+  .process.in .track::after { transform: scaleX(1); }
+  .pstep { position: relative; padding-right: var(--s-300); }
+  .pstep .tick { width: 15px; height: 15px; border: 1px solid var(--rule-strong); background: var(--bg); position: relative; z-index: 1; transition: background-color 500ms var(--ease), border-color 500ms var(--ease); }
+  .process.in .pstep .tick { background: var(--sig-text); border-color: var(--sig-text); }
+  .process.in .pstep:nth-child(3) .tick { transition-delay: 450ms; }
+  .process.in .pstep:nth-child(4) .tick { transition-delay: 800ms; }
+  .process.in .pstep:nth-child(5) .tick { transition-delay: 1150ms; }
+  .process.in .pstep:nth-child(6) .tick { transition-delay: 1500ms; }
+  .pstep .mono { display: block; margin-top: var(--s-300); color: var(--muted); }
+  .pstep h3 { margin-top: var(--s-75); }
+  .pstep p { margin-top: var(--s-75); }
+
+  /* Compare */
+  .rule-box { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--rule-strong); margin-bottom: var(--s-500); }
+  .rule-box > div { padding: var(--s-300); }
+  .rule-box > div + div { border-left: 1px solid var(--rule-strong); }
+  .rule-box .label { display: block; margin-bottom: var(--s-100); }
+  .cmp-tbl td { padding-right: var(--s-300); }
+  .cmp-tbl .who { width: 18%; }
+  .cmp-tbl tr.hide { display: none; }
+  .cmp-tbl .lbl { display: none; }
+
+  /* Act */
+  .report { align-items: start; }
+  .report-left { grid-column: 4 / span 4; }
+  .act-card { grid-column: 8 / span 5; position: relative; background: var(--paper); border: 1px solid var(--rule); padding: var(--s-400); }
+  .act-card::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 4px; background: var(--sig); }
+  .act-head { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: var(--s-200); border-bottom: 1px solid var(--rule-strong); }
+  .ctrl-row { display: flex; justify-content: space-between; align-items: center; gap: var(--s-200); padding: var(--s-200) 0; border-bottom: 1px solid var(--rule); }
+  .stepper { display: inline-flex; align-items: stretch; border: 1px solid var(--rule-strong); border-radius: 4px; overflow: hidden; }
+  .stepper button { width: 36px; display: grid; place-items: center; transition: background-color 300ms var(--ease); }
+  .stepper button:hover { background: var(--tint); }
+  .stepper button:active { background: var(--sig); color: var(--sig-ink); }
+  .stepper output { min-width: 40px; display: grid; place-items: center; border-left: 1px solid var(--rule-strong); border-right: 1px solid var(--rule-strong); }
+  .xl-field { display: inline-flex; align-items: center; border: 1px solid var(--rule-strong); border-radius: 4px; overflow: hidden; transition: border-color 300ms var(--ease); }
+  .xl-field:focus-within { border-color: var(--sig); }
+  .xl-field input { width: 120px; padding: var(--s-75) var(--s-100); border: 0; background: transparent; color: var(--ink); text-align: right; outline: none; }
+  .xl-field span { padding: 0 var(--s-100); border-left: 1px solid var(--rule); align-self: stretch; display: grid; place-items: center; }
+  .xl-field.bad { border-color: #E5484D; }
+  .xl-err { color: #E5484D; margin-top: var(--s-75); }
+  .xl-err:empty { display: none; }
+  .act-lines { margin-top: var(--s-300); }
+  .act-line { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-200); padding: var(--s-100) 0; border-bottom: 1px solid var(--rule); animation: fadeUp 500ms var(--ease); }
+  .act-line:last-child { border-bottom: 0; }
+  .act-line b { font-weight: 500; white-space: nowrap; }
+  .act-total { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-200); margin-top: var(--s-300); padding-top: var(--s-200); border-top: 1px solid var(--rule-strong); }
+  .act-total .heading-3 { font-family: var(--mono); font-weight: 500; letter-spacing: -0.03em; }
+  .sign { display: flex; justify-content: space-between; gap: var(--s-300); margin-top: var(--s-500); }
+  .sign span { flex: 1; border-top: 1px solid var(--rule-strong); padding-top: var(--s-75); }
+
+  /* Tagline */
+  .tagline { padding: var(--s-900) 0 120px; }
+  .tagline p { grid-column: 4 / span 9; max-width: 900px; }
+  .tagline .w { color: var(--dim); transition: color 500ms var(--ease); }
+  .tagline .w.on { color: var(--ink); }
+  .tagline .w.hl.on { color: var(--sig-text); }
+
+  /* FAQ */
+  .faq-head { text-align: center; max-width: 680px; margin: var(--s-300) auto var(--s-600); }
+  .faq-head .label { display: block; margin-bottom: var(--s-200); }
+  .faq { max-width: 860px; margin: 0 auto; border-top: 1px solid var(--rule-strong); }
+  .faq details { border-bottom: 1px solid var(--rule); }
+  .faq summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 48px 1fr 24px; gap: var(--s-200); align-items: baseline; padding: var(--s-300) 0; transition: color 300ms var(--ease); }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary:hover { color: var(--sig-text); }
+  .faq summary .mono { color: var(--muted); }
+  .faq summary i { transition: transform 500ms var(--ease); align-self: center; }
+  .faq details[open] summary i { transform: rotate(45deg); }
+  .faq details p { padding: 0 0 var(--s-300) 64px; max-width: 760px; }
+  .faq details[open] p { animation: fadeUp 500ms var(--ease); }
+
+  /* Final */
+  .final { background: var(--deep); color: var(--on-deep); padding: var(--s-900) 0; position: relative; overflow: hidden; }
+  .final .grid { align-items: end; position: relative; z-index: 1; }
+  .final .label { color: var(--deep-acc); }
+  .final h2 { grid-column: 1 / span 8; }
+  .final h2 .acc { color: var(--deep-acc); }
+  .final .lead { grid-column: 1 / span 6; margin-top: var(--s-300); color: var(--on-deep-muted); }
+  .final .contacts { grid-column: 1 / span 12; display: flex; flex-wrap: wrap; gap: var(--s-200); margin-top: var(--s-600); }
+  .final .btn-ink { background: var(--deep-acc); color: var(--deep); }
+  .final .btn-line { border-color: var(--deep-line); color: var(--on-deep); }
+  .final .btn-line:hover { background: var(--on-deep); color: var(--deep); border-color: var(--on-deep); }
+  .final .btn[aria-disabled="true"] { opacity: 0.55; }
+  .final .who { grid-column: 1 / span 12; margin-top: var(--s-400); padding-top: var(--s-200); border-top: 1px solid var(--deep-line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--s-200); }
+  .final .who, .final .who .mono { color: var(--on-deep-muted); }
+  .final .big { position: absolute; right: -0.04em; bottom: -0.22em; font-size: 320px; line-height: 1; font-weight: 600; letter-spacing: -0.06em; color: var(--deep-acc); opacity: 0.08; pointer-events: none; user-select: none; }
+  .final ::selection { background: var(--deep-acc); color: var(--deep); }
+
+  footer { padding: var(--s-300) 0 var(--s-500); }
+  .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-200); }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(32px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
+  .reveal.in { opacity: 1; transform: none; }
+  .stagger > * { opacity: 0; transform: translateY(16px); transition: opacity 600ms var(--ease), transform 600ms var(--ease); }
+  .stagger.in > * { opacity: 1; transform: none; }
+  .stagger.in > *:nth-child(2) { transition-delay: 60ms; } .stagger.in > *:nth-child(3) { transition-delay: 120ms; }
+  .stagger.in > *:nth-child(4) { transition-delay: 180ms; } .stagger.in > *:nth-child(5) { transition-delay: 240ms; }
+  .stagger.in > *:nth-child(6) { transition-delay: 300ms; } .stagger.in > *:nth-child(7) { transition-delay: 360ms; }
+
+  .toast { position: fixed; left: 50%; bottom: var(--s-300); z-index: 60; transform: translate(-50%, 24px); opacity: 0; padding: var(--s-100) var(--s-200); background: var(--ink); color: var(--bg); transition: transform 500ms var(--ease), opacity 300ms var(--ease); pointer-events: none; }
+  .toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .heading-1 { font-size: 72px; }
+    .hero-title { grid-column: 1 / -1; }
+    .hero-side { display: none; }
+    .hero-lead, .hero-cta { grid-column: 1 / -1; }
+    .spec { grid-column: 1 / -1; margin-top: var(--s-600); }
+    .report-left, .act-card { grid-column: 1 / -1; }
+    .act-card { margin-top: var(--s-500); }
+    .sec-num { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; margin-bottom: var(--s-300); }
+    .sec-title, .body-col, .tagline p { grid-column: 1 / -1; }
+    .final .big { font-size: 200px; }
+    .final h2, .final .lead { grid-column: 1 / -1; }
+  }
+  @media (max-width: 900px) {
+    .nav-links, .nav .btn-sig { display: none; }
+    .burger { display: grid; }
+    .process { grid-template-columns: 1fr; gap: var(--s-300); }
+    .process .track { left: 7px; right: auto; top: 0; bottom: 0; width: 1px; height: auto; }
+    .process .track::after { transform: scaleY(0); transform-origin: top; }
+    .process.in .track::after { transform: scaleY(1); }
+    .pstep { display: grid; grid-template-columns: 15px 1fr; column-gap: var(--s-300); }
+    .pstep .tick { grid-row: span 3; margin-top: 4px; }
+    .pstep .mono { margin-top: 0; }
+    .footnotes, .cols-2 { grid-template-columns: 1fr; gap: var(--s-300); }
+  }
+  @media (max-width: 720px) {
+    .wrap { padding: 0 var(--s-200); }
+    .grid { column-gap: var(--s-200); }
+    .heading-1 { font-size: 48px; line-height: 1; }
+    .heading-2 { font-size: 36px; line-height: 40px; }
+    .heading-3 { font-size: 30px; line-height: 36px; }
+    .hero { padding-top: 112px; }
+    .hero-title { margin-top: var(--s-500); }
+    .sec { padding-bottom: var(--s-800); }
+    .sec-head { margin-bottom: var(--s-500); }
+    .doc-meta span:nth-child(2) { display: none; }
+    .plans thead { display: none; }
+    .plans td.yr { display: none; }
+    .dev-tbl thead, .cmp-tbl thead { display: none; }
+    .dev-tbl tr, .cmp-tbl tr { display: grid; grid-template-columns: 64px 1fr; column-gap: var(--s-200); padding: var(--s-200) 0; border-bottom: 1px solid var(--rule); }
+    .dev-tbl td, .cmp-tbl td { border: 0; padding: 0; width: auto !important; }
+    .dev-tbl .size { grid-row: span 3; }
+    .dev-tbl .price { font-size: 20px; line-height: 28px; }
+    .dev-tbl .term, .dev-tbl .ex { grid-column: 2; margin-top: var(--s-75); }
+    .cmp-tbl tr { grid-template-columns: 1fr; row-gap: var(--s-100); }
+    .cmp-tbl .lbl { display: block; }
+    .rule-box { grid-template-columns: 1fr; }
+    .rule-box > div + div { border-left: 0; border-top: 1px solid var(--rule-strong); }
+    .ref-table tr { display: grid; padding: var(--s-200) 0; border-bottom: 1px solid var(--rule); }
+    .ref-table td { border: 0; padding: 0; width: auto !important; }
+    .ref-table td:first-child { margin-bottom: var(--s-75); }
+    .act-card { padding: var(--s-300) var(--s-200); }
+    .ctrl-row { flex-wrap: wrap; }
+    .seg { display: flex; width: 100%; }
+    .seg button { flex: 1; padding: var(--s-75) var(--s-100); }
+    .faq summary { grid-template-columns: 32px 1fr 20px; gap: var(--s-100); }
+    .faq details p { padding-left: 44px; }
+    .final .big { font-size: 128px; }
+    .tagline { padding: var(--s-800) 0 var(--s-900); }
+
+    /* Компактная типографика для телефона */
+    .heading-1 { font-size: 40px; line-height: 44px; letter-spacing: -0.035em; }
+    .heading-2 { font-size: 30px; line-height: 36px; }
+    .heading-3 { font-size: 24px; line-height: 32px; }
+    .heading-5 { font-size: 20px; line-height: 28px; }
+    .title-2 { font-size: 16px; line-height: 24px; }
+    .hero { padding-top: 96px; padding-bottom: var(--s-600); }
+    .hero-title { margin-top: var(--s-400); }
+    .hero-bottom { margin-top: var(--s-300); }
+    .hero-cta { margin-top: var(--s-300); }
+    .spec { margin-top: var(--s-500); padding: var(--s-200); }
+    .sec { padding-bottom: var(--s-700); }
+    .sec-head { margin-top: var(--s-200); margin-bottom: var(--s-400); }
+    .sec-num { margin-bottom: var(--s-200); }
+    .sec-title p { margin-top: var(--s-100); }
+    .sub-h { margin: var(--s-600) 0 var(--s-200); flex-wrap: wrap; gap: var(--s-75); }
+    .note-line { margin-top: var(--s-300); }
+    .clauses li { grid-template-columns: 40px 1fr; padding: var(--s-100) 0; }
+    .tagline { padding: var(--s-600) 0 var(--s-700); }
+    .tagline p { font-size: 24px; line-height: 32px; }
+    .final { padding: var(--s-700) 0; }
+    .final .contacts { margin-top: var(--s-400); }
+    .final .contacts .btn { width: 100%; justify-content: center; }
+    .faq-head { margin-bottom: var(--s-400); }
+    .faq summary { padding: var(--s-200) 0; font-size: 16px; line-height: 24px; }
+    .footnotes { margin-top: var(--s-300); }
+    .process .pstep p { margin-top: var(--s-50); }
+
+    /* Принцип: в одну колонку */
+    .principle-list { grid-template-columns: 1fr !important; }
+    .principle-list li { grid-template-columns: 40px 1fr !important; border-top: 0 !important; }
+    .principle-list li:first-child { border-top: 1px solid var(--rule-strong) !important; }
+
+    /* Тарифы */
+    .plans td { padding-top: var(--s-200); padding-bottom: var(--s-200); }
+    .plans td.heading-5 { font-size: 18px; line-height: 28px; }
+    .plans td:first-child { padding-left: var(--s-200); }
+    .plans .pname { font-size: 18px; line-height: 28px; }
+    .plans tbody td:first-child::before { width: 6px; height: 6px; margin-top: -3px; }
+
+    /* По каждой программе: подписи у ячеек */
+    .ref-table thead { display: none; }
+    .ref-table td:first-child { color: var(--ink); font-weight: 600; margin-bottom: var(--s-100); }
+    .ref-table td:nth-child(2), .ref-table td:nth-child(3) { display: grid; grid-template-columns: 96px 1fr; gap: var(--s-100); padding: var(--s-50) 0; }
+    .ref-table td:nth-child(2)::before, .ref-table td:nth-child(3)::before { font-family: var(--mono); font-size: 12px; line-height: 20px; color: var(--muted); }
+    .ref-table td:nth-child(2)::before { content: "ProgressPlan"; }
+    .ref-table td:nth-child(3)::before { content: "Controller"; }
+
+    /* Сроки реакции: карточкой */
+    .sla-tbl thead { display: none; }
+    .sla-tbl tr { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-75) var(--s-200); padding: var(--s-200) 0; border-bottom: 1px solid var(--rule); }
+    .sla-tbl td { border: 0; padding: 0; text-align: left !important; }
+    .sla-tbl td:first-child { grid-column: 1 / -1; font-weight: 500; }
+    .sla-tbl td:nth-child(2)::before { content: "Ответ  "; }
+    .sla-tbl td:nth-child(3)::before { content: "Решение  "; }
+    .sla-tbl td:nth-child(2)::before, .sla-tbl td:nth-child(3)::before { display: block; font-size: 12px; line-height: 16px; color: var(--muted); margin-bottom: var(--s-25); }
+
+    /* Доработки и сравнение */
+    .dev-tbl tr { grid-template-columns: 48px 1fr; }
+    .dev-tbl .size .heading-3 { font-size: 30px; line-height: 36px; }
+    .rule-box > div { padding: var(--s-200); }
+    .rule-box .heading-5 { font-size: 18px; line-height: 28px; }
+    .cmp-tbl tr { padding: var(--s-200) 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; }
+    .reveal, .stagger > * { transform: none; transition: opacity 300ms linear; }
+    .hero-title .ln > span { transform: none; transition: none; }
+    .rule-top { transform: none; transition: none; }
+    .tagline .w { color: var(--ink); transition: none; }
+    .tagline .w.hl { color: var(--sig-text); }
+    .process .track::after { transition: none; }
+    .m-panel a { transform: none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip button-sm" href="#main">Перейти к содержанию</a>
+
+<nav class="nav" aria-label="Основная навигация">
+  <a class="brand body-4" href="#top" aria-label="В начало"><span class="brand-mark"></span>PP × Controller</a>
+  <div class="nav-links body-6">
+    <a href="#pricing"><span class="mono">01</span>Тарифы</a>
+    <a href="#included"><span class="mono">02</span>Состав</a>
+    <a href="#dev"><span class="mono">03</span>Доработки</a>
+    <a href="#process"><span class="mono">04</span>Порядок</a>
+    <a href="#report"><span class="mono">06</span>Акт</a>
+    <a href="#terms"><span class="mono">07</span>Условия</a>
+  </div>
+  <button class="icon-btn" id="themeBtn" aria-label="Переключить тему">
+    <i class="ph ph-moon theme-ico ico-moon"></i>
+    <i class="ph ph-sun theme-ico ico-sun"></i>
+  </button>
+  <a class="btn btn-sig button-sm" href="#contact">Обсудить</a>
+  <button class="icon-btn burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="mpanel"><span></span><span></span></button>
+</nav>
+<div class="m-panel heading-5" id="mpanel" aria-hidden="true">
+  <a href="#pricing"><span class="mono body-6">01</span>Тарифы</a>
+  <a href="#included"><span class="mono body-6">02</span>Состав абонемента</a>
+  <a href="#dev"><span class="mono body-6">03</span>Доработки</a>
+  <a href="#process"><span class="mono body-6">04</span>Порядок работы</a>
+  <a href="#report"><span class="mono body-6">06</span>Акт и отчётность</a>
+  <a href="#terms"><span class="mono body-6">07</span>Условия</a>
+  <a href="#contact"><span class="mono body-6">→</span>Обсудить условия</a>
+</div>
+
+<main id="main">
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="doc-meta label muted">
+      <span>Коммерческое предложение</span>
+      <span>Сопровождение и развитие</span>
+      <span class="mono">КП / 2026 / 11</span>
+    </div>
+    <div class="grid">
+      <div class="hero-title">
+        <h1 class="heading-1">
+          <span class="ln"><span>Две программы</span></span>
+          <span class="ln"><span>один абонемент<span class="dot">.</span></span></span>
+        </h1>
+      </div>
+    </div>
+    <div class="grid hero-bottom">
+      <div class="hero-copy">
+        <p class="hero-lead title-2 muted reveal">Готов сопровождать и развивать ProgressPlan и Controller в вашей компании. Фиксированная плата за поддержку и фиксированная цена каждой доработки, согласованная до начала работ.</p>
+        <div class="hero-cta reveal">
+          <a class="btn btn-ink btn-lg button-md" href="#pricing">Посмотреть тарифы <i class="ph ph-arrow-down-right"></i></a>
+          <span class="body-6 muted">Пробный период 3 месяца</span>
+        </div>
+      </div>
+      <aside class="spec reveal" aria-label="Ключевые параметры">
+        <span class="cm" aria-hidden="true"></span>
+        <div class="spec-head label"><span>Параметры</span><span class="muted mono">01—07</span></div>
+        <div class="spec-row hl body-6"><span>Абонемент на обе программы</span><b class="mono">50 000 ₽ / мес</b></div>
+        <div class="spec-row body-6"><span>Вместо раздельного</span><b class="mono muted"><s>60 000 ₽</s></b></div>
+        <div class="spec-row body-6"><span>Экономия за год</span><b class="mono">120 000 ₽</b></div>
+        <div class="spec-row body-6"><span>Доработки</span><b class="mono">от 5 000 ₽</b></div>
+        <div class="spec-row body-6"><span>Ответ, если всё легло</span><b class="mono">≤ 2 ч</b></div>
+        <div class="spec-row body-6"><span>Обращения и часы</span><b>не считаются</b></div>
+      </aside>
+    </div>
+  </div>
+</header>
+
+<!-- 00 PRINCIPLE -->
+<section class="sec" id="principle">
+  <div class="wrap">
+    <div class="rule-top"></div>
+    <div class="grid sec-head">
+      <div class="sec-num reveal"><span class="mono sig">00</span><span class="label muted">Принцип</span></div>
+      <div class="sec-title reveal">
+        <h2 class="heading-2">Оплата за результат, а не за часы</h2>
+        <p class="title-2 muted">Часы невозможно проверить. Поэтому вы платите фиксированную сумму за поддержку и фиксированную цену за каждую принятую задачу.</p>
+      </div>
+    </div>
+    <div class="grid">
+      <ol class="body-col cols-2 clauses stagger principle-list" style="grid-template-columns: repeat(3, 1fr); gap: 0 var(--s-300)">
+        <li style="grid-template-columns:1fr;border-top:1px solid var(--rule-strong)"><span class="mono">0.1</span><span><b class="body-1">Постоянная сумма.</b> <span class="body-6 muted">Абонемент не зависит от числа обращений и потраченного времени.</span></span></li>
+        <li style="grid-template-columns:1fr;border-top:1px solid var(--rule-strong)"><span class="mono">0.2</span><span><b class="body-1">Цена известна заранее.</b> <span class="body-6 muted">Оказалась задача сложнее, цена не растёт: это мой риск, а не ваш.</span></span></li>
+        <li style="grid-template-columns:1fr;border-top:1px solid var(--rule-strong)"><span class="mono">0.3</span><span><b class="body-1">Только принятое.</b> <span class="body-6 muted">В акт попадает только то, что вы проверили. Каждая строка ссылается на задачу в трекере.</span></span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- 01 PRICING -->
+<section class="sec" id="pricing">
+  <div class="wrap">
+    <div class="rule-top"></div>
+    <div class="grid sec-head">
+      <div class="sec-num reveal"><span class="mono sig">01</span><span class="label muted">Тарифы</span></div>
+      <div class="sec-title reveal">
+        <h2 class="heading-2">Абонемент на поддержку</h2>
+        <p class="title-2 muted">Можно взять одну программу. Обе вместе выходят на 10 000 ₽ в месяц дешевле.</p>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="body-col reveal">
+        <table class="tbl plans">
+          <thead class="label muted"><tr><th>Тариф</th><th class="num">В месяц</th><th class="num yr">За год</th></tr></thead>
+          <tbody>
+            <tr><td><span class="pname heading-6">ProgressPlan</span><span class="body-6 muted">Расчёт прогресса по WBS, периодам и трудозатратам</span></td><td class="num heading-5 mono" data-count="30000">30 000 ₽</td><td class="num yr body-3 mono muted">360 000 ₽</td></tr>
+            <tr><td><span class="pname heading-6">Controller</span><span class="body-6 muted">Приёмка объектов: замечания, предписания, подрядчики</span></td><td class="num heading-5 mono" data-count="30000">30 000 ₽</td><td class="num yr body-3 mono muted">360 000 ₽</td></tr>
+            <tr class="best"><td><span class="pname heading-6">Обе программы</span><span class="body-6 muted">Один договор, один акт, одни сроки реакции</span></td><td class="num heading-5 mono" data-count="50000">50 000 ₽</td><td class="num yr body-3 mono">600 000 ₽</td></tr>
+          </tbody>
+          <tfoot><tr><td class="body-6 muted">Пакет против двух программ по отдельности</td><td class="num"><span class="save-chip label">−10 000 ₽</span></td><td class="num yr"><span class="save-chip label">−120 000 ₽</span></td></tr></tfoot>
+        </table>
+        <div class="note-line body-6"><span class="mono">*</span><span class="muted">Доработки оплачиваются отдельно по прайсу из раздела 03, от 5 000 ₽ за задачу, одинаково для обеих программ.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TAGLINE -->
+<section class="tagline" aria-label="Главное">
+  <div class="wrap grid">
+    <p class="heading-2" id="tagline" data-hl="результат,|до">Вы платите за результат, а не за часы. Цену каждой задачи знаете до того, как я начну работу.</p>
+  </div>
+</section>
+
+<!-- 02 INCLUDED -->
+<section class="sec" id="included">
+  <div class="wrap">
+    <div class="rule-top"></div>
+    <div class="grid sec-head">
+      <div class="sec-num reveal"><span class="mono sig">02</span><span class="label muted">Состав абонемента</span></div>
+      <div class="sec-title reveal">
+        <h2 class="heading-2">Вся повседневная работа с программами</h2>
+        <p class="title-2 muted">Программы работают, данные в них актуальны, сотрудники умеют ими пользоваться. Количество обращений не ограничено.</p>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="body-col">
+        <ol class="cols-2 clauses stagger body-3" style="gap: 0 var(--s-600)">
+          <li><span class="mono">2.1</span><span>Консультации: «как сделать», «почему не считается», «почему не синхронизируется», «где найти»</span></li>
+          <li><span class="mono">2.2</span><span>Обучение сотрудников и подрядчиков, группой и индивидуально, плюс инструкции</span></li>
+          <li><span class="mono">2.3</span><span>Мелкие правки, задачи размера S из раздела 03</span></li>
+          <li><span class="mono">2.4</span><span>Исправление ошибок в существующем функционале, правило в разделе 05</span></li>
+          <li><span class="mono">2.5</span><span>Контроль работы приложений на сервере, обновления</span></li>
+          <li><span class="mono">2.6</span><span>Пользователи: добавление, блокировка, сброс паролей, права доступа</span></li>
+        </ol>
+
+        <div class="sub-h reveal"><h3 class="heading-5">По каждой программе</h3><span class="label muted">2.7</span></div>
+        <table class="tbl ref-table body-6 reveal">
+          <thead class="label muted"><tr><th></th><th>ProgressPlan</th><th>Controller</th></tr></thead>
+          <tbody>
+            <tr><td>Загрузка данных</td><td>Файлы Excel с WBS и периодами, заведение новых проектов, проверка результата</td><td>Проекты, помещения и объекты контроля, подрядные организации, нормативы, чеклисты, шаблоны предписаний</td></tr>
+            <tr><td>Мелкие правки, например</td><td>Поля и подписи, столбец в существующем отчёте</td><td>Поля и подписи, статус замечания, текст в шаблоне предписания</td></tr>
+            <tr><td>Дополнительно</td><td class="muted">—</td><td>Помощь с установкой и обновлением приложения на Android и iOS</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sub-h reveal"><h3 class="heading-5">Сроки реакции</h3><span class="label muted">2.8 · рабочие дни, <span style="white-space:nowrap">8:00–18:00</span></span></div>
+        <table class="tbl sla-tbl body-6 reveal">
+          <thead class="label muted"><tr><th>Ситуация</th><th class="num">Ответ</th><th class="num">Решение</th></tr></thead>
+          <tbody>
+            <tr><td><span class="sig mono">!!!</span>&nbsp; Программа не открывается у всех</td><td class="num mono">≤ 2 ч</td><td class="num mono">тот же день</td></tr>
+            <tr><td><span class="sig mono">!!</span>&nbsp;&nbsp; Ошибка мешает работе</td><td class="num mono">≤ 1 дня</td><td class="num mono">≤ 2 дней</td></tr>
+            <tr><td><span class="sig mono">!</span>&nbsp;&nbsp;&nbsp; Вопрос или несрочная ошибка</td><td class="num mono">≤ 1 дня</td><td class="num mono">≤ 5 дней</td></tr>
+          </tbody>
+        </table>
+        <div class="note-line body-6"><span class="mono">×</span><span class="muted">Не входит: доработки размера M, L и XL. Они оплачиваются по прайсу из раздела 03.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 DEV -->
+<section class="sec" id="dev" data-prog="pp">
+  <div class="wrap">
+    <div class="rule-top"></div>
+    <div class="grid sec-head">
+      <div class="sec-num reveal"><span class="mono sig">03</span><span class="label muted">Доработки</span></div>
+      <div class="sec-title reveal">
+        <h2 class="heading-2">Единый прайс для обеих программ</h2>
+        <p class="title-2 muted">Размер и цена назначаются до начала работ. Переключите программу, чтобы увидеть примеры задач.</p>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="body-col">
+        <div class="seg button-sm reveal" role="tablist" aria-label="Примеры для программы" style="margin-bottom:var(--s-400)">
+          <button role="tab" aria-selected="true" data-prog-btn="pp">ProgressPlan</button>
+          <button role="tab" aria-selected="false" data-prog-btn="ctrl">Controller</button>
+        </div>
+        <table class="tbl dev-tbl reveal">
+          <thead class="label muted"><tr><th>Размер</th><th>Цена</th><th>Срок</th><th>Примеры задач</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="size"><span class="heading-3">S</span></td>
+              <td class="price heading-6 sig">в абонементе</td>
+              <td class="term body-6 mono">до 3 раб. дней</td>
+              <td class="ex body-6 muted"><p class="pp">Переименовать поля и подписи, добавить столбец в существующий отчёт и т.п.</p><p class="ctrl">Переименовать поля и подписи, добавить статус замечания, поправить текст шаблона предписания и т.п.</p></td>
+            </tr>
+            <tr>
+              <td class="size"><span class="heading-3">M</span></td>
+              <td class="price heading-6 mono">5 000 ₽</td>
+              <td class="term body-6 mono">до 7 раб. дней</td>
+              <td class="ex body-6 muted"><p class="pp">Новый фильтр или сортировка, новая выгрузка в Excel, импорт под новый шаблон файла WBS или трудозатрат и т.п.</p><p class="ctrl">Новый фильтр в реестре замечаний, новая выгрузка в Excel или PDF, новое поле в карточке замечания, новое напоминание и т.п.</p></td>
+            </tr>
+            <tr>
+              <td class="size"><span class="heading-3">L</span></td>
+              <td class="price heading-6 mono">10 000 ₽</td>
+              <td class="term body-6 mono">до 15 раб. дней</td>
+              <td class="ex body-6 muted"><p class="pp">Новый отчёт, новый раздел или страница, новая роль с отдельными правами, уведомления по срокам и т.п.</p><p class="ctrl">Новый отчёт по подрядчикам, новый вид документа по шаблону, новая роль, доработка шахматки или обхода технадзора и т.п.</p></td>
+            </tr>
+            <tr>
+              <td class="size"><span class="heading-3">XL</span></td>
+              <td class="price heading-6">договорная<sup class="mono sig">3</sup></td>
+              <td class="term body-6 mono">по смете</td>
+              <td class="ex body-6 muted"><p class="pp">Интеграция с 1С или другой системой, новый большой блок учёта и т.п.</p><p class="ctrl">Интеграция с другой системой, новый большой раздел и т.п.</p></td>
+            </tr>
+          </tbody>
+        </table>
+        <ol class="footnotes body-6 stagger">
+          <li><sup>1</sup><span><b>Срочно.</b> <span class="muted">Вне очереди, в половину срока: +50% к цене задачи.</span></span></li>
+          <li><sup>2</sup><span><b>Задача на обе программы.</b> <span class="muted">Например, обмен данными между ними. Оценивается как одна задача по общему объёму.</span></span></li>
+          <li><sup>3</sup><span><b>XL по частям.</b> <span class="muted">Смета разбивается на задачи S, M и L, каждая принимается и оплачивается отдельно.</span></span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 PROCESS -->
+<section class="sec" id="process">
+  <div class="wrap">
+    <div class="rule-top"></div>
+    <div class="grid sec-head">
+      <div class="sec-num reveal"><span class="mono sig">04</span><span class="label muted">Порядок работы</span></div>
+      <div class="sec-title reveal">
+        <h2 class="heading-2">Работа начинается только после согласования цены</h2>
+        <p class="title-2 muted">Порядок одинаковый для обеих программ. Ни одна задача не попадает в акт без вашей приёмки.</p>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="body-col">
+        <div class="process" id="flow">
+          <span class="track" aria-hidden="true"></span>
+          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.1</span><h3 class="title-3">Заявка</h3><p class="body-6 muted">Вы ставите задачу в трекере</p></div>
+          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.2</span><h3 class="title-3">Оценка</h3><p class="body-6 muted">Размер, цена и срок в течение 1 рабочего дня</p></div>
+          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.3</span><h3 class="title-3">Согласование</h3><p class="body-6 muted">Без вашего «да» работа не начинается</p></div>
+          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.4</span><h3 class="title-3">Выполнение</h3><p class="body-6 muted">В согласованный срок</p></div>
+          <div class="pstep"><div class="tick"></div><span class="mono caption-5">4.5</span><h3 class="title-3">Приёмка и акт</h3><p class="body-6 muted">Вы проверяете, задача попадает в акт месяца</p></div>
+        </div>
+        <ol class="footnotes body-6 stagger" style="margin-top:var(--s-700)">
+          <li><sup>↺</sup><span><b>Не согласовали цену.</b> <span class="muted">Уточняем задачу и оцениваем заново.</span></span></li>
+          <li><sup>↺</sup><span><b>Есть замечания.</b> <span class="muted">Задача возвращается в работу без доплаты.</span></span></li>
+          <li><sup>3д</sup><span><b>Срок проверки.</b> <span class="muted">Нет замечаний за 3 рабочих дня, задача считается принятой.</span></span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 BUG OR FEATURE -->
+<section class="sec" id="bugs">
+  <div class="wrap">
+    <div class="rule-top"></div>
+    <div class="grid sec-head">
+      <div class="sec-num reveal"><span class="mono sig">05</span><span class="label muted">Ошибка или доработка</span></div>
+      <div class="sec-title reveal"><h2 class="heading-2">Одно правило вместо споров</h2></div>
+    </div>
+    <div class="grid">
+      <div class="body-col">
+        <div class="rule-box reveal">
+          <div><span class="label muted">Ошибка · бесплатно</span><p class="heading-5">Работает не так, как было согласовано</p></div>
+          <div><span class="label sig">Доработка · по прайсу</span><p class="heading-5">Хотим, чтобы работало иначе</p></div>
+        </div>
+        <div class="seg button-sm reveal" role="tablist" aria-label="Фильтр по программе" id="cmpTabs" style="margin-bottom:var(--s-300)">
+          <button role="tab" aria-selected="true" data-f="all">Все</button>
+          <button role="tab" aria-selected="false" data-f="pp">ProgressPlan</button>
+          <button role="tab" aria-selected="false" data-f="ctrl">Controller</button>
+        </div>
+        <table class="tbl cmp-tbl body-6 reveal" id="cmp">
+          <thead class="label muted"><tr><th>Программа</th><th>Ошибка</th><th>Доработка</th></tr></thead>
+          <tbody>
+            <tr data-p="pp"><td class="who mono muted">ProgressPlan</td><td><span class="lbl label muted">Ошибка</span>Процент выполнения считается не по заложенной формуле</td><td><span class="lbl label sig">Доработка</span>Нужна другая методика расчёта</td></tr>
+            <tr data-p="pp"><td class="who mono muted">ProgressPlan</td><td><span class="lbl label muted">Ошибка</span>Файл в привычном формате перестал загружаться</td><td><span class="lbl label sig">Доработка</span>Изменился шаблон файла, и программу нужно научить его читать</td></tr>
+            <tr data-p="ctrl"><td class="who mono muted">Controller</td><td><span class="lbl label muted">Ошибка</span>Замечание, созданное без связи, не синхронизируется после появления сети</td><td><span class="lbl label sig">Доработка</span>Нужно, чтобы без связи работал раздел, который раньше так не работал</td></tr>
+            <tr data-p="ctrl"><td class="who mono muted">Controller</td><td><span class="lbl label muted">Ошибка</span>Предписание формируется с ошибкой или без части данных</td><td><span class="lbl label sig">Доработка</span>Нужен новый вид документа или другая форма предписания</td></tr>
+            <tr data-p="both"><td class="who mono muted">Обе</td><td><span class="lbl label muted">Ошибка</span>Кнопка не срабатывает, страница не открывается</td><td><span class="lbl label sig">Доработка</span>Хочется другой вид или новая кнопка</td></tr>
+          </tbody>
+        </table>
+        <div class="note-line body-6"><span class="mono">§</span><span class="muted">Если мнения расходятся, смотрим на письменное согласование задачи или на поведение программы на момент передачи. Поэтому все задачи фиксируются в трекере.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 REPORT -->
+<section class="sec" id="report">
+  <div class="wrap">
+    <div class="rule-top"></div>
+    <div class="grid sec-head">
+      <div class="sec-num reveal"><span class="mono sig">06</span><span class="label muted">Отчётность</span></div>
+      <div class="sec-title reveal"><h2 class="heading-2">Всё, что вы оплачиваете, можно проверить</h2></div>
+    </div>
+    <div class="grid report">
+      <ol class="report-left clauses stagger body-6">
+        <li><span class="mono">6.1</span><span><b>Трекер задач</b> (Яндекс Трекер, Kaiten или аналог) с доступом для вашего ответственного: программа, автор, размер, цена, срок, статус</span></li>
+        <li><span class="mono">6.2</span><span><b>Список изменений</b> к каждой новой версии каждой программы</span></li>
+        <li><span class="mono">6.3</span><span><b>Журнал обращений:</b> дата, программа, вопрос, когда решено</span></li>
+        <li><span class="mono">6.4</span><span><b>Один ежемесячный акт</b> на обе программы, каждая строка ссылается на задачу в трекере</span></li>
+      </ol>
+      <div class="act-card reveal" aria-labelledby="calcTitle">
+        <div class="act-head"><h3 class="heading-6" id="calcTitle">Акт за месяц</h3><span class="label muted">Калькулятор</span></div>
+        <div class="ctrl-row">
+          <span class="title-3">Абонемент</span>
+          <div class="seg button-sm" role="tablist" aria-label="Абонемент" id="planTabs">
+            <button role="tab" aria-selected="false" data-plan="pp">PP</button>
+            <button role="tab" aria-selected="false" data-plan="ctrl">Controller</button>
+            <button role="tab" aria-selected="true" data-plan="both">Обе</button>
+          </div>
+        </div>
+        <div class="ctrl-row">
+          <div><div class="title-3">Задачи M</div><div class="caption-5 muted mono">5 000 ₽ / шт.</div></div>
+          <div class="stepper"><button data-step="m" data-d="-1" aria-label="Меньше задач M"><i class="ph ph-minus"></i></button><output class="body-4 mono" id="mOut">1</output><button data-step="m" data-d="1" aria-label="Больше задач M"><i class="ph ph-plus"></i></button></div>
+        </div>
+        <div class="ctrl-row">
+          <div><div class="title-3">Задачи L</div><div class="caption-5 muted mono">10 000 ₽ / шт.</div></div>
+          <div class="stepper"><button data-step="l" data-d="-1" aria-label="Меньше задач L"><i class="ph ph-minus"></i></button><output class="body-4 mono" id="lOut">1</output><button data-step="l" data-d="1" aria-label="Больше задач L"><i class="ph ph-plus"></i></button></div>
+        </div>
+        <div class="ctrl-row">
+          <div><label class="title-3" for="xlIn">Задачи XL</label><div class="caption-5 muted">сумма по согласованной смете</div></div>
+          <div class="xl-field"><input id="xlIn" class="body-4 mono" type="text" inputmode="numeric" placeholder="0" autocomplete="off" aria-describedby="xlErr"><span class="body-6 muted">₽</span></div>
+        </div>
+        <p class="caption-5 xl-err" id="xlErr" role="alert"></p>
+        <div class="act-lines body-6" id="act" aria-live="polite"></div>
+        <div class="act-total"><span class="title-2">Итого</span><span class="heading-3" id="total">65 000 ₽</span></div>
+        <div class="sign caption-5 muted"><span>Исполнитель</span><span>Заказчик</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 TERMS -->
+<section class="sec" id="terms">
+  <div class="wrap">
+    <div class="rule-top"></div>
+    <div class="grid sec-head">
+      <div class="sec-num reveal"><span class="mono sig">07</span><span class="label muted">Условия</span></div>
+      <div class="sec-title reveal"><h2 class="heading-2">Прозрачно и без мелкого шрифта</h2></div>
+    </div>
+    <div class="grid">
+      <ol class="body-col cols-2 clauses stagger body-6" style="gap: 0 var(--s-600)">
+        <li><span class="mono">7.1</span><span><b class="body-1">Пакетная цена.</b><br><span class="muted">50 000 ₽ в месяц действует, пока на сопровождении обе программы. Если одна снимается с сопровождения, абонемент на оставшуюся составляет 30 000 ₽ в месяц.</span></span></li>
+        <li><span class="mono">7.2</span><span><b class="body-1">Оформление.</b><br><span class="muted">Один договор оказания услуг с абонентской платой на обе программы. Исполнитель самозанятый: чек на каждую оплату, налоги и взносы за исполнителя компания не платит.</span></span></li>
+        <li><span class="mono">7.3</span><span><b class="body-1">Оплата.</b><br><span class="muted">Абонемент в начале месяца. Доработки по акту в конце месяца, в течение 5 рабочих дней после подписания. Задачи XL по этапам сметы.</span></span></li>
+        <li><span class="mono">7.4</span><span><b class="body-1">Права на доработки.</b><br><span class="muted">Неисключительные права на новый код переходят к заказчику после оплаты, как и по договорам продажи программ. Код хранится у заказчика.</span></span></li>
+        <li><span class="mono">7.5</span><span><b class="body-1">Конфиденциальность.</b><br><span class="muted">Данные проектов и доступы не передаются третьим лицам.</span></span></li>
+        <li><span class="mono">7.6</span><span><b class="body-1">Пробный период 3 месяца.</b><br><span class="muted">При необходимости по его итогам цены и состав абонемента можно скорректировать по договорённости сторон. Дальше цены пересматриваются не чаще 1 раза в год с предупреждением за месяц.</span></span></li>
+        <li><span class="mono">7.7</span><span><b class="body-1">Расторжение.</b><br><span class="muted">Любая сторона может завершить сотрудничество по одной или обеим программам, предупредив за 14 дней. Начатые задачи завершаются или передаются с описанием.</span></span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- 08 FAQ -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="rule-top"></div>
+    <div class="faq-head reveal">
+      <span class="label"><span class="sig mono">08</span> &nbsp;<span class="muted">Вопросы</span></span>
+      <h2 class="heading-2">Коротко о главном</h2>
+    </div>
+    <div class="faq reveal">
+      <details><summary class="title-2"><span class="mono body-6">8.1</span>Сколько обращений входит в абонемент?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Количество обращений и часы не считаются. Консультации, обучение, загрузка данных, мелкие правки и исправление ошибок входят в абонемент полностью.</p></details>
+      <details><summary class="title-2"><span class="mono body-6">8.2</span>Что будет, если задача окажется сложнее оценки?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Цена не растёт. Размер и цена фиксируются до начала работ, и риск ошибиться в оценке лежит на мне.</p></details>
+      <details><summary class="title-2"><span class="mono body-6">8.3</span>Как понять, это ошибка или доработка?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Работает не так, как было согласовано, значит ошибка, и она исправляется бесплатно. Хотим, чтобы работало иначе, значит доработка по прайсу.</p></details>
+      <details><summary class="title-2"><span class="mono body-6">8.4</span>Можно оставить на сопровождении только одну программу?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Да. Абонемент на одну программу стоит 30 000 ₽ в месяц, пакетная цена 50 000 ₽ действует, пока на сопровождении обе.</p></details>
+      <details><summary class="title-2"><span class="mono body-6">8.5</span>Как быстро вы отвечаете?<i class="ph ph-plus"></i></summary><p class="body-6 muted">В рабочие дни с 8:00 до 18:00. Если программа не открывается у всех, ответ в течение 2 часов и решение в тот же день. Остальные обращения в течение рабочего дня.</p></details>
+      <details><summary class="title-2"><span class="mono body-6">8.6</span>Кому принадлежит код доработок?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Неисключительные права на новый код переходят к вам после оплаты, как и по договорам продажи программ. Код хранится у вас.</p></details>
+      <details><summary class="title-2"><span class="mono body-6">8.7</span>Как прекратить сотрудничество?<i class="ph ph-plus"></i></summary><p class="body-6 muted">Предупредить за 14 дней. Это можно сделать по одной программе или по обеим. Начатые задачи завершаются или передаются с описанием.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL -->
+<section class="final" id="contact">
+  <span class="big" aria-hidden="true">50k</span>
+  <div class="wrap grid">
+    <span class="label" style="grid-column:1/-1;margin-bottom:var(--s-300)">Следующий шаг</span>
+    <h2 class="heading-1 reveal">Начнём с пробных трёх месяцев<span class="acc">.</span></h2>
+    <p class="lead title-2 reveal">Обе программы за 50 000 ₽ в месяц. Если по итогам пробного периода понадобятся изменения, цены и состав абонемента можно будет скорректировать.</p>
+    <div class="contacts reveal" id="contacts"></div>
+    <div class="who label"><span id="contactName">Разработчик ProgressPlan и Controller</span><span class="mono">КП / 2026 / 11</span></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot caption-5 muted">
+    <span>Коммерческое предложение · сопровождение ProgressPlan и Controller · 2026</span>
+    <a href="#top">Наверх ↑</a>
+  </div>
+</footer>
+
+<div class="toast body-4" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  /* Контакты */
+  var CONTACT = {
+    name: '{{Ваше имя}}',
+    phone: '+7 951 600 54 02',
+    max: '+7 951 600 54 02',
+    email: 'gromov211300@gmail.com',
+    telegram: 'oib_oi'
+  };
+
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var root = document.documentElement;
+    function fmt(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+
+    /* Неразрывные пробелы в суммах */
+    (function () {
+      var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      var n;
+      while ((n = walker.nextNode())) {
+        if (/\d \d{3}| ₽/.test(n.nodeValue)) {
+          n.nodeValue = n.nodeValue.replace(/(\d) (?=\d{3}\b)/g, '$1 ').replace(/ ₽/g, ' ₽');
+        }
+      }
+    })();
+
+    requestAnimationFrame(function () { requestAnimationFrame(function () { document.body.classList.add('loaded'); }); });
+
+    /* Theme */
+    function syncMeta() { document.querySelector('meta[name="theme-color"]').setAttribute('content', root.getAttribute('data-theme') === 'dark' ? '#181818' : '#F2F1EC'); }
+    syncMeta();
+    document.getElementById('themeBtn').addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('kp-theme-v2', next); } catch (e) {}
+      syncMeta();
+    });
+
+    /* Mobile menu */
+    var burger = document.getElementById('burger');
+    var panel = document.getElementById('mpanel');
+    var links = panel.querySelectorAll('a');
+    function setMenu(open) {
+      document.body.classList.toggle('menu-open', open);
+      burger.setAttribute('aria-expanded', open);
+      burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+      panel.setAttribute('aria-hidden', !open);
+      links.forEach(function (a, i) { a.style.transitionDelay = open ? Math.min(i * 60, 400) + 'ms' : '0ms'; });
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+    burger.addEventListener('click', function () { setMenu(!document.body.classList.contains('menu-open')); });
+    links.forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+
+    /* Reveal */
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal, .stagger, .rule-top, .process').forEach(function (el) { io.observe(el); });
+
+    /* Active nav */
+    var navMap = {};
+    document.querySelectorAll('.nav-links a').forEach(function (a) { navMap[a.getAttribute('href').slice(1)] = a; });
+    var navIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        Object.keys(navMap).forEach(function (k) { navMap[k].classList.remove('is-active'); });
+        if (navMap[en.target.id]) navMap[en.target.id].classList.add('is-active');
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('main section[id]').forEach(function (s) { navIo.observe(s); });
+
+    /* Tagline word reveal */
+    var tag = document.getElementById('tagline');
+    var hl = (tag.getAttribute('data-hl') || '').split('|');
+    var words = tag.textContent.trim().split(/\s+/);
+    tag.innerHTML = words.map(function (w) { return '<span class="w' + (hl.indexOf(w) > -1 ? ' hl' : '') + '">' + w + '</span>'; }).join(' ');
+    var spans = tag.querySelectorAll('.w');
+    if (!reduce) {
+      var ticking = false;
+      var update = function () {
+        ticking = false;
+        var r = tag.getBoundingClientRect(), vh = window.innerHeight;
+        var start = vh * 0.85, end = vh * 0.35;
+        var p = Math.max(0, Math.min(1, (start - r.top) / (start - end + r.height * 0.5)));
+        var n = Math.round(p * spans.length);
+        for (var i = 0; i < n; i++) spans[i].classList.add('on');
+      };
+      window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+      update();
+    }
+
+    /* Counters */
+    var cIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        cIo.unobserve(en.target);
+        var el = en.target, to = +el.getAttribute('data-count');
+        if (reduce) { el.textContent = fmt(to) + ' ₽'; return; }
+        var t0 = null;
+        var step = function (t) {
+          if (!t0) t0 = t;
+          var k = Math.min(1, (t - t0) / 1400);
+          el.textContent = fmt(to * (1 - Math.pow(1 - k, 4))) + ' ₽';
+          if (k < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.6 });
+    document.querySelectorAll('[data-count]').forEach(function (el) { if (!reduce) el.textContent = '0 ₽'; cIo.observe(el); });
+
+    /* Dev examples switch */
+    var dev = document.getElementById('dev');
+    var devBtns = document.querySelectorAll('[data-prog-btn]');
+    devBtns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        devBtns.forEach(function (x) { x.setAttribute('aria-selected', x === b); });
+        dev.setAttribute('data-prog', b.getAttribute('data-prog-btn'));
+      });
+    });
+
+    /* Compare filter */
+    var cmpBtns = document.querySelectorAll('#cmpTabs [data-f]');
+    cmpBtns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var f = b.getAttribute('data-f');
+        cmpBtns.forEach(function (x) { x.setAttribute('aria-selected', x === b); });
+        document.querySelectorAll('#cmp [data-p]').forEach(function (r) {
+          var p = r.getAttribute('data-p');
+          r.classList.toggle('hide', !(f === 'all' || p === f || p === 'both'));
+        });
+      });
+    });
+
+    /* Calculator */
+    var PLANS = { pp: ['Абонемент ProgressPlan', 30000], ctrl: ['Абонемент Controller', 30000], both: ['Абонемент ProgressPlan и Controller', 50000] };
+    var state = { plan: 'both', m: 1, l: 1, xl: 0 };
+    var shown = 65000;
+    var actEl = document.getElementById('act'), totalEl = document.getElementById('total');
+    function line(name, sum) { return '<div class="act-line"><span>' + name + '</span><b class="mono">' + fmt(sum) + ' ₽</b></div>'; }
+    function render() {
+      var p = PLANS[state.plan];
+      var html = line(p[0], p[1]);
+      if (state.m) html += line('Задачи M × ' + state.m, state.m * 5000);
+      if (state.l) html += line('Задачи L × ' + state.l, state.l * 10000);
+      if (state.xl) html += line('Задачи XL по смете', state.xl);
+      actEl.innerHTML = html;
+      document.getElementById('mOut').textContent = state.m;
+      document.getElementById('lOut').textContent = state.l;
+      var target = p[1] + state.m * 5000 + state.l * 10000 + state.xl;
+      if (reduce) { totalEl.textContent = fmt(target) + ' ₽'; shown = target; return; }
+      var from = shown, t0 = null;
+      var anim = function (t) {
+        if (!t0) t0 = t;
+        var k = Math.min(1, (t - t0) / 600);
+        totalEl.textContent = fmt(from + (target - from) * (1 - Math.pow(1 - k, 4))) + ' ₽';
+        if (k < 1) requestAnimationFrame(anim); else shown = target;
+      };
+      requestAnimationFrame(anim);
+    }
+    var planBtns = document.querySelectorAll('[data-plan]');
+    planBtns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        planBtns.forEach(function (x) { x.setAttribute('aria-selected', x === b); });
+        state.plan = b.getAttribute('data-plan');
+        render();
+      });
+    });
+    document.querySelectorAll('[data-step]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var k = b.getAttribute('data-step');
+        state[k] = Math.max(0, Math.min(20, state[k] + +b.getAttribute('data-d')));
+        render();
+      });
+    });
+    var xlIn = document.getElementById('xlIn'), xlErr = document.getElementById('xlErr');
+    xlIn.addEventListener('input', function () {
+      var raw = xlIn.value.replace(/[\s ]/g, '');
+      var bad = raw !== '' && !/^\d+$/.test(raw);
+      var num = bad || raw === '' ? 0 : Math.min(+raw, 99999999);
+      xlIn.parentNode.classList.toggle('bad', bad);
+      xlErr.textContent = bad ? 'Введите сумму цифрами, например 40000' : '';
+      if (!bad) xlIn.value = raw === '' ? '' : fmt(num);
+      state.xl = num;
+      render();
+    });
+    render();
+
+    /* Contacts */
+    function filled(v) { return v && v.indexOf('{{') !== 0; }
+    var toast = document.getElementById('toast');
+    function say(msg) {
+      toast.textContent = msg; toast.classList.add('show');
+      clearTimeout(say.t); say.t = setTimeout(function () { toast.classList.remove('show'); }, 2400);
+    }
+    var cBox = document.getElementById('contacts');
+    [
+      { v: CONTACT.telegram, href: 'https://t.me/' + CONTACT.telegram, label: 'Telegram @' + CONTACT.telegram, icon: 'ph-telegram-logo', cls: 'btn-ink', blank: true },
+      { v: CONTACT.max, label: 'MAX ' + CONTACT.max, icon: 'ph-chat-circle-dots', cls: 'btn-line', copyOnly: true, msg: 'Номер ' + CONTACT.max + ' скопирован, найдите его в MAX' },
+      { v: CONTACT.phone, href: 'tel:' + CONTACT.phone.replace(/[^\d+]/g, ''), label: CONTACT.phone, icon: 'ph-phone', cls: 'btn-line' },
+      { v: CONTACT.email, href: 'mailto:' + CONTACT.email + '?subject=' + encodeURIComponent('Сопровождение ProgressPlan и Controller'), label: CONTACT.email, icon: 'ph-envelope-simple', cls: 'btn-line', copy: true }
+    ].forEach(function (it) {
+      var a = document.createElement(it.copyOnly ? 'button' : 'a');
+      a.className = 'btn btn-lg button-md ' + it.cls;
+      a.innerHTML = '<i class="ph ' + it.icon + '"></i>' + it.label.replace(/[{}]/g, '');
+      if (filled(it.v)) {
+        if (it.copyOnly) {
+          a.type = 'button';
+          a.title = 'Скопировать номер для MAX';
+          a.addEventListener('click', function () {
+            try { navigator.clipboard.writeText(it.v.replace(/\s/g, '')); say(it.msg); } catch (e) { say('Номер для MAX: ' + it.v); }
+          });
+        } else {
+          a.href = it.href;
+        }
+        if (it.blank) { a.target = '_blank'; a.rel = 'noopener'; }
+        if (it.copy) a.addEventListener('click', function () { try { navigator.clipboard.writeText(it.v); say('Адрес ' + it.v + ' скопирован'); } catch (e) {} });
+      } else {
+        a.setAttribute('aria-disabled', 'true');
+        a.title = 'Контакт не указан';
+      }
+      cBox.appendChild(a);
+    });
+    if (filled(CONTACT.name)) document.getElementById('contactName').textContent = CONTACT.name + ' · автор ProgressPlan и Controller';
+  })();
+</script>
+</body>
+</html>
